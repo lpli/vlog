@@ -6,7 +6,7 @@ spring:
   profiles: dev
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/test
+      url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8
       driver-class: com.mysql.jdbc.Driver
       username: vlog
       password: 123456
