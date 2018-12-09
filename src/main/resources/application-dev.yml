@@ -23,7 +23,7 @@ spring:
       pool-prepared-statements: false
       max-pool-prepared-statement-per-connection-size: 20
       filters: stat,wall,log4j,config
-      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=false
       monitor:
         enabled: enabled # 配置此属性Monitor才生效
         druid-stat-view: /druid/*
