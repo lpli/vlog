@@ -1,6 +1,7 @@
 package com.jason.controller;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.jason.entity.User;
 import com.jason.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,8 @@ public class UserController {
     @ResponseBody
     @GetMapping("/list")
     public List<User> list(){
-        return userService.list();
+        EntityWrapper<User> entityWrapper = new EntityWrapper<>();
+        return userService.selectList(entityWrapper);
     }
 
 }

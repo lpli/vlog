@@ -1,7 +1,7 @@
 package com.jason.service;
 
+import com.baomidou.mybatisplus.service.IService;
 import com.jason.entity.User;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>

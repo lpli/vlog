@@ -1,7 +1,7 @@
 package com.jason.dao;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.jason.entity.User;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
