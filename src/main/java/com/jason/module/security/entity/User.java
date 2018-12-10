@@ -1,4 +1,4 @@
-package com.jason.entity;
+package com.jason.module.security.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 

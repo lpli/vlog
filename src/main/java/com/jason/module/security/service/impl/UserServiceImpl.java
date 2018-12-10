@@ -1,9 +1,9 @@
-package com.jason.service.impl;
+package com.jason.module.security.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.jason.entity.User;
-import com.jason.dao.UserMapper;
-import com.jason.service.UserService;
+import com.jason.module.security.entity.User;
+import com.jason.module.security.dao.UserMapper;
+import com.jason.module.security.service.UserService;
 import org.springframework.stereotype.Service;
 
 /**
