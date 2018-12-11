@@ -1,7 +1,8 @@
 package com.jason.module.security.service;
 
-import com.baomidou.mybatisplus.service.IService;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.jason.module.security.entity.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * <p>
@@ -11,6 +12,6 @@ import com.jason.module.security.entity.User;
  * @author lpli
  * @since 2018-12-09
  */
-public interface UserService extends IService<User> {
+public interface UserService extends IService<User>  {
 
 }

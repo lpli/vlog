@@ -6,10 +6,10 @@ spring:
   profiles: dev
   datasource:
     druid:
-      url: jdbc:mysql://10.6.168.13:3306/test?useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8
       driver-class: com.mysql.jdbc.Driver
-      username: sales_invoice
-      password: d41d8cd98f00b204
+      username: vlog
+      password: 123456
       initial-size: 1
       min-idle: 1
       max-active: 20
@@ -34,6 +34,12 @@ spring:
         login-password: 123456
         exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
         reset-enable: false
+  mvc:
+    static-path-pattern: /resources/static/**
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+
 
 
 mybatis-plus:

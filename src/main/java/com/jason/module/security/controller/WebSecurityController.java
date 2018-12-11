@@ -21,7 +21,7 @@ import java.util.List;
  **/
 @RestController
 @Slf4j
-public class LoginController {
+public class WebSecurityController {
 
 
     /**
@@ -48,23 +48,11 @@ public class LoginController {
             String targetUrl = savedRequest.getRedirectUrl();
             log.info("引发跳转的请求是:" + targetUrl);
             if (!isAjaxRequest(savedRequest)) {
-                redirectStrategy.sendRedirect(request, response, "/login");
+                redirectStrategy.sendRedirect(request, response, "/loginPage");
             }
         }
         return new BaseResponse("访问的服务需要身份认证，请引导用户到登录页");
     }
-
-
-    /**
-     * 登录页面
-     * @return
-     */
-    @GetMapping("/loginPage")
-    public String login(){
-        return "login";
-    }
-
-
 
     /**
      * 是否来源于ajax请求
