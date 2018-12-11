@@ -6,10 +6,10 @@ spring:
   profiles: dev
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://10.6.168.13:3306/test?useUnicode=true&characterEncoding=utf8
       driver-class: com.mysql.jdbc.Driver
-      username: vlog
-      password: 123456
+      username: sales_invoice
+      password: d41d8cd98f00b204
       initial-size: 1
       min-idle: 1
       max-active: 20
@@ -41,7 +41,7 @@ mybatis-plus:
   mapper-locations:
     - classpath:mapper/*.xml
   # 实体扫描，多个package用逗号或者分号分隔
-  type-aliases-package: com.jason.entity
+  type-aliases-package: com.jason.module.security.entity
   # 检测mybatis配置文件是否存在
   check-config-location: false
   configuration:

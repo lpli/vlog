@@ -8,10 +8,7 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +19,7 @@ import java.util.List;
  * @Author liliping
  * @Date 2018/12/10
  **/
-@Controller
+@RestController
 @Slf4j
 public class LoginController {
 
@@ -62,10 +59,12 @@ public class LoginController {
      * 登录页面
      * @return
      */
-    @GetMapping("/login")
+    @GetMapping("/loginPage")
     public String login(){
         return "login";
     }
+
+
 
     /**
      * 是否来源于ajax请求
