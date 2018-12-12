@@ -46,6 +46,7 @@ public class User extends Model<User> implements UserDetails {
         this.name = name;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }

@@ -1,5 +1,6 @@
 package com.jason.module.security.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.module.security.entity.User;
 import com.jason.module.security.service.UserService;
@@ -18,6 +19,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userService.getOne(new QueryWrapper<User>().eq("name",s));
+        return userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUsername,s));
     }
 }

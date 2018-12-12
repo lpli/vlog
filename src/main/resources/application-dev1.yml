@@ -1,0 +1,68 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: test
+  profiles: dev
+  datasource:
+    druid:
+      url: jdbc:mysql://10.6.168.13:3306/test?useUnicode=true&characterEncoding=utf8
+      driver-class: com.mysql.jdbc.Driver
+      username: sales_invoice
+      password: d41d8cd98f00b204
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      test-on-borrow: true
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-While-Idle: true
+      test-on-return: false
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall,log4j,config
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=false
+      monitor:
+        enabled: enabled # 配置此属性Monitor才生效
+        druid-stat-view: /druid/*
+        druid-web-stat-filter: /*
+        allow: 127.0.0.1
+        deny: 219.230.50.108
+        login-username: admin
+        login-password: 123456
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+        reset-enable: false
+  mvc:
+    static-path-pattern: /resources/static/**
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+
+
+
+mybatis-plus:
+  # 配置扫描xml
+  mapper-locations:
+    - classpath:mapper/*.xml
+  # 实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: com.jason.module.security.entity
+  # 检测mybatis配置文件是否存在
+  check-config-location: false
+  configuration:
+    # 驼峰装换
+    map-underscore-to-camel-case: true
+
+  global-config:
+    # 刷新mapper文件修改 用于开发环境
+    refresh: true
+    # 逻辑删除配置
+    logic-delete-value: 0
+    logic-not-delete-value: 1
+
+
+
+
+
+
