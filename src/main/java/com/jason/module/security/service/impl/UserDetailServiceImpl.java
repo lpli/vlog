@@ -19,6 +19,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUsername,s));
+        return userService.getOne(new QueryWrapper<User>().lambda().eq(User::getName,s));
     }
 }

@@ -48,7 +48,7 @@ public class WebSecurityController {
             String targetUrl = savedRequest.getRedirectUrl();
             log.info("引发跳转的请求是:" + targetUrl);
             if (!isAjaxRequest(savedRequest)) {
-                redirectStrategy.sendRedirect(request, response, "/loginPage");
+                redirectStrategy.sendRedirect(request, response, "/login");
             }
         }
         return new BaseResponse("访问的服务需要身份认证，请引导用户到登录页");

@@ -3,7 +3,7 @@ server:
 spring:
   application:
     name: test
-  profiles: dev
+  profiles: dev1
   datasource:
     druid:
       url: jdbc:mysql://10.6.168.13:3306/test?useUnicode=true&characterEncoding=utf8

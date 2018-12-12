@@ -6,7 +6,7 @@ package com.jason.common.vo;
  **/
 public class BaseResponse {
 
-    private String msg;
+    protected String msg;
 
     public BaseResponse(String msg) {
         this.msg = msg;

@@ -1,5 +1,6 @@
 package com.jason.module.security.adapter;
 
+import com.jason.module.security.comp.LoginAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,10 +24,16 @@ public class VlogSecurityAdapter extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-//    }
+    @Autowired
+    private LoginAuthenticationProvider authenticationProvider;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        auth.authenticationProvider(authenticationProvider);
+    }
+
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -35,8 +42,8 @@ public class VlogSecurityAdapter extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/loginPage")
-                .permitAll().anyRequest().authenticated().and().formLogin().loginPage("/loginPage").loginProcessingUrl("/login")
+        http.authorizeRequests().antMatchers("/login")
+                .permitAll().anyRequest().authenticated().and().formLogin().loginPage("/login")
                 .usernameParameter("username").passwordParameter("password")
                 .failureUrl("/authentication/require")
                 .and().logout().and().csrf().disable();

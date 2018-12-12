@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.StringJoiner;
 
 /**
  * <p>
@@ -27,7 +28,7 @@ public class User extends Model<User> implements UserDetails {
 
     private Boolean enable;
 
-    private Boolean lock;
+    private Boolean locked;
 
 
     public Integer getId() {
@@ -63,12 +64,12 @@ public class User extends Model<User> implements UserDetails {
         this.enable = enable;
     }
 
-    public Boolean getLock() {
-        return lock;
+    public Boolean getLocked() {
+        return locked;
     }
 
-    public void setLock(Boolean lock) {
-        this.lock = lock;
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 
     @Override
@@ -83,22 +84,22 @@ public class User extends Model<User> implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return lock;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return enable;
+        return true;
     }
 
     @Override
@@ -108,12 +109,12 @@ public class User extends Model<User> implements UserDetails {
 
     @Override
     public String toString() {
-        return "User{" +
-        "id=" + id +
-        ", name=" + name +
-        ", password=" + password +
-        ", enable=" + enable +
-        ", lock=" + lock +
-        "}";
+        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("name='" + name + "'")
+                .add("password='" + password + "'")
+                .add("enable=" + enable)
+                .add("locked=" + locked)
+                .toString();
     }
 }
