@@ -8,6 +8,9 @@ public class BaseResponse {
 
     protected String msg;
 
+    public BaseResponse() {
+    }
+
     public BaseResponse(String msg) {
         this.msg = msg;
     }

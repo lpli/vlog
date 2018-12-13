@@ -8,6 +8,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+/**
+ * 提供用户认证
+ * 验证用户密码，以及是否具有权限
+ */
 @Configuration
 public class LoginAuthenticationProvider extends DaoAuthenticationProvider {
 
@@ -35,8 +39,5 @@ public class LoginAuthenticationProvider extends DaoAuthenticationProvider {
             throw new BadCredentialsException(messages
                     .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
         }
-
     }
-
-
 }
