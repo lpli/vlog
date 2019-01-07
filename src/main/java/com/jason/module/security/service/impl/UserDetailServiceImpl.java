@@ -1,14 +1,20 @@
 package com.jason.module.security.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.jason.module.security.dto.UserDto;
+import com.jason.module.security.entity.Role;
 import com.jason.module.security.entity.User;
-import com.jason.module.security.service.UserService;
+import com.jason.module.security.entity.UserAuthority;
+import com.jason.module.security.service.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -17,8 +23,38 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private MenuService menuService;
+    @Autowired
+    private ElementService elementService;
+    @Autowired
+    private OperationService operationService;
+
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userService.getOne(new QueryWrapper<User>().lambda().eq(User::getName,s));
+        User user = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUserName, s));
+        if (user == null) {
+            throw new UsernameNotFoundException("用户不存在");
+        }
+        List<Role> roleList = roleService.getRoleList(user.getId());
+        List<Long> roleIdList = new ArrayList<>();
+        List<UserAuthority> userAuthorities = new ArrayList<>();
+        roleList.forEach((role) -> {
+            userAuthorities.add(new UserAuthority(role));
+            roleIdList.add(role.getId());
+        });
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(user, userDto);
+        userDto.setUserAuthorityList(userAuthorities);
+        if(!roleIdList.isEmpty()){
+            userDto.setMenuList(menuService.getMenuList(roleIdList));
+            userDto.setElementList(elementService.getElementList(roleIdList));
+            userDto.setOperationList(operationService.getOperationList(roleIdList));
+        }
+        return userDto;
     }
 }

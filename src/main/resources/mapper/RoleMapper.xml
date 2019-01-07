@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jason.module.security.dao.RoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jason.module.security.entity.Role">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name,code
+    </sql>
+
+    <!--查询用户-角色关联表下的role-->
+    <select id="queryRoleByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select b.* from user_role_r a
+        left join role b on a.role_id = b.id
+        where user_id = #{userId}
+    </select>
+    <!--查询用户组-角色关联下的role-->
+    <select id="queryGroupRoleListByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select r.* from user_group_re ug
+        left join user_group_role_re re on re.group_id = ug.group_id
+        left join role r on re.role_id = r.id
+        where ug.user_id = #{userId}
+    </select>
+
+</mapper>

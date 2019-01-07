@@ -1,10 +1,14 @@
 package com.jason.module.security.controller;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import sun.plugin.liveconnect.SecurityContextHelper;
 
 @Controller
 public class IndexController {
@@ -27,6 +31,9 @@ public class IndexController {
         return "index";
     }
 
-
+    @RequestMapping(value={"/403"},produces = "text/html")
+    public String forbidden(){
+        return "forbidden";
+    }
 
 }

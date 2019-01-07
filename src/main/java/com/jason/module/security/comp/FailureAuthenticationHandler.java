@@ -26,16 +26,22 @@ import java.util.List;
 @Slf4j
 public class FailureAuthenticationHandler implements AuthenticationFailureHandler {
 
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8.toString());
-        httpServletResponse.getWriter().write(new JsonResponse(ResponseCode.FAILURE.getCode(),e.getLocalizedMessage()).toString());
+        if (isAjaxRequest(httpServletRequest)) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8.toString());
+            httpServletResponse.getWriter().write(new JsonResponse(ResponseCode.FAILURE.getCode(),e.getLocalizedMessage()).toString());
+        }else{
+            httpServletRequest.getSession().setAttribute("SPRING_SECURITY_LAST_EXCEPTION", e);
+            httpServletResponse.sendRedirect("/login?error");
+        }
     }
 
-    private boolean isAjaxRequest(SavedRequest savedRequest){
-        List<String> list =  savedRequest.getHeaderValues("X-Requested-With");
-        if(!list.isEmpty()&&list.contains("XMLHttpRequest")){
+    private boolean isAjaxRequest(HttpServletRequest httpServletRequest){
+        String header =  httpServletRequest.getHeader("X-Requested-With");
+        if(("XMLHttpRequest").equals(header)){
             return true;
         }
         return false;

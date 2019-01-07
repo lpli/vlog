@@ -1,59 +1,113 @@
 package com.jason.module.security.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
+import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDateTime;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.StringJoiner;
 
 /**
  * <p>
- * 
+ * 用户表
  * </p>
  *
  * @author lpli
- * @since 2018-12-11
+ * @since 2019-01-05
  */
-public class User extends Model<User> implements UserDetails {
+public class User extends Model<User> {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
-    private String name;
+    /**
+     * 用户名
+     */
+    private String userName;
 
+    /**
+     * 昵称
+     */
+    private String nickName;
+
+    /**
+     * 密码
+     */
     private String password;
 
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 手机号
+     */
+    private String phone;
+
+    /**
+     * 是否可用(1:可用；0:禁用)
+     */
     private Boolean enable;
 
-    private Boolean locked;
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    @Override
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Boolean getEnable() {
@@ -64,42 +118,20 @@ public class User extends Model<User> implements UserDetails {
         this.enable = enable;
     }
 
-    public Boolean getLocked() {
-        return locked;
+    public LocalDateTime getCreateTime() {
+        return createTime;
     }
 
-    public void setLocked(Boolean locked) {
-        this.locked = locked;
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
     }
 
-    @Override
-    public String getUsername() {
-        return this.name;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override
@@ -109,12 +141,16 @@ public class User extends Model<User> implements UserDetails {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("name='" + name + "'")
-                .add("password='" + password + "'")
-                .add("enable=" + enable)
-                .add("locked=" + locked)
-                .toString();
+        return "User{" +
+        "id=" + id +
+        ", userName=" + userName +
+        ", nickName=" + nickName +
+        ", password=" + password +
+        ", email=" + email +
+        ", phone=" + phone +
+        ", enable=" + enable +
+        ", createTime=" + createTime +
+        ", updateTime=" + updateTime +
+        "}";
     }
 }

@@ -22,6 +22,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+    @Autowired
+    private FailureAuthenticationHandler failureAuthenticationHandler;
     /**
      * 密码加密
      * @return
@@ -56,9 +60,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/login","/authentication/require")
+        http.authorizeRequests().antMatchers("/login")
                 .permitAll().anyRequest().authenticated().and().formLogin().loginPage("/login")
-                .usernameParameter("username").passwordParameter("password").failureHandler(new FailureAuthenticationHandler())
-                .and().logout().and().csrf().disable();
+                .usernameParameter("username").passwordParameter("password").failureHandler(failureAuthenticationHandler)
+                .and().logout().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler).and().csrf().disable();
     }
+
+
 }

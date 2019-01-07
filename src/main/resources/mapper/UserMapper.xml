@@ -5,15 +5,19 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.jason.module.security.entity.User">
         <id column="id" property="id" />
-        <result column="name" property="name" />
+        <result column="user_name" property="userName" />
+        <result column="nick_name" property="nickName" />
         <result column="password" property="password" />
+        <result column="email" property="email" />
+        <result column="phone" property="phone" />
         <result column="enable" property="enable" />
-        <result column="locked" property="locked" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id,`name`,password,enable,locked
+        id, user_name, nick_name, password, email, phone, enable, create_time, update_time
     </sql>
 
 </mapper>

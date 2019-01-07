@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 
 import java.util.Collections;
 
@@ -42,13 +43,13 @@ public class MybatisPlusGenerator {
         ).setPackageInfo(
                 // 包配置
                 new PackageConfig()
-                        .setParent("com.jason")// 自定义包路径
+                        .setParent("com.jason.module.security")// 自定义包路径
                         .setController("controller")// 这里是控制器包名，默认 web
                         .setEntity("entity")
                         .setMapper("dao")
                         .setService("service")
                         .setServiceImpl("service.impl")
-        ).setCfg(new InjectionConfig() {
+        ).setStrategy(new StrategyConfig().setCapitalMode(true).setNaming(NamingStrategy.underline_to_camel)).setCfg(new InjectionConfig() {
             @Override
             public void initMap() {
 

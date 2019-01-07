@@ -6,7 +6,7 @@
 </head>
 <body>
     <form method="post" action="/login">
-        <span th:if="${param.error}" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"></span>
+        <span th:if="${param.error}" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}" style="color:red;"></span><br/>
         用户名:<input name="username" type="text"/>
         密码:<input name="password" type="password"/>
         <button type="submit" >登录</button>

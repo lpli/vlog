@@ -1,5 +1,7 @@
 package com.jason.module.security.comp;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,11 +17,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @Configuration
 public class LoginAuthenticationProvider extends DaoAuthenticationProvider {
 
+    @Autowired
+    private MessageSource messageSource;
+
     public LoginAuthenticationProvider(UserDetailsService userDetailsService) {
-        super();
-        setUserDetailsService(userDetailsService);
-        setHideUserNotFoundExceptions(true);
+        super.setUserDetailsService(userDetailsService);
+        super.setMessageSource(messageSource);
     }
+
+
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
@@ -39,5 +45,6 @@ public class LoginAuthenticationProvider extends DaoAuthenticationProvider {
             throw new BadCredentialsException(messages
                     .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
         }
+
     }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jason.module.security.dao.MenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jason.module.security.entity.Menu">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="url" property="url" />
+        <result column="pid" property="pid" />
+        <result column="seq" property="seq" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, url, pid,seq
+    </sql>
+
+    <select id="queryMenuListByRole" parameterType="java.util.List">
+       select m.* from role_permission_re rp
+       left join  permission per on per.id = rp.permission and per.type = 1
+       left join  permission_menu_re pm on pm.permission_id = per.id
+       left join menu m on m.id = pm.menu_id
+       where rp.role_id in
+       <foreach collection="roleIdList" open="(" close=")" item="item" separator=",">
+           #{item}
+       </foreach>
+    </select>
+
+</mapper>
