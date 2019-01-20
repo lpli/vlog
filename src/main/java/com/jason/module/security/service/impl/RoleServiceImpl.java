@@ -30,4 +30,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         }
         return list;
     }
+
+    @Override
+    public List<Role> getRoleListByOpId(Long operationId) {
+        return baseMapper.queryRoleListByOpId(operationId);
+    }
 }

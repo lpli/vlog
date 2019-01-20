@@ -18,4 +18,6 @@ public interface RoleMapper extends BaseMapper<Role> {
     List<Role> queryRoleByUserId(Long userId);
 
     List<Role> queryGroupRoleListByUserId(Long userId);
+
+    List<Role> queryRoleListByOpId(Long operationId);
 }

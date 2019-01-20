@@ -27,5 +27,13 @@
         left join role r on re.role_id = r.id
         where ug.user_id = #{userId}
     </select>
+    <!-- 根据操作id查询角色列表 -->
+    <select id="queryRoleListByOpId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select r.* from role_permission_re rp
+        left join role r on r.id = rp.role_id
+        left join  permission per on per.id = rp.permission_id and per.type = 3
+        left join  permission_operation_re pm on pm.permission_id = per.id
+        where pm.operation_id = #{operationId}
+    </select>
 
 </mapper>

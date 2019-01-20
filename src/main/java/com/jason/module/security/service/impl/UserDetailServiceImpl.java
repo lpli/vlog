@@ -26,14 +26,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Autowired
     private RoleService roleService;
 
-    @Autowired
-    private MenuService menuService;
-    @Autowired
-    private ElementService elementService;
-    @Autowired
-    private OperationService operationService;
-
-
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUserName, s));
@@ -41,20 +33,13 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("用户不存在");
         }
         List<Role> roleList = roleService.getRoleList(user.getId());
-        List<Long> roleIdList = new ArrayList<>();
         List<UserAuthority> userAuthorities = new ArrayList<>();
         roleList.forEach((role) -> {
             userAuthorities.add(new UserAuthority(role));
-            roleIdList.add(role.getId());
         });
         UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(user, userDto);
+        BeanUtils.copyProperties(user,userDto);
         userDto.setUserAuthorityList(userAuthorities);
-        if(!roleIdList.isEmpty()){
-            userDto.setMenuList(menuService.getMenuList(roleIdList));
-            userDto.setElementList(elementService.getElementList(roleIdList));
-            userDto.setOperationList(operationService.getOperationList(roleIdList));
-        }
         return userDto;
     }
 }

@@ -15,4 +15,5 @@ import java.util.List;
  */
 public interface OperationMapper extends BaseMapper<Operation> {
     List<Operation> queryOperationListByRole(List<Long> roleIdList);
+    List<Operation> queryOperationListByRoleId(Long roleId);
 }

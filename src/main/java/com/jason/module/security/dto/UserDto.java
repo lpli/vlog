@@ -11,42 +11,9 @@ public class UserDto extends User implements UserDetails {
 
     private List<UserAuthority> userAuthorityList;
 
-    private List<Menu> menuList;
-
-    private List<Element> elementList;
-
-    private List<Operation> operationList;
-
-    public List<UserAuthority> getUserAuthorityList() {
-        return userAuthorityList;
-    }
 
     public void setUserAuthorityList(List<UserAuthority> userAuthorityList) {
         this.userAuthorityList = userAuthorityList;
-    }
-
-    public List<Menu> getMenuList() {
-        return menuList;
-    }
-
-    public void setMenuList(List<Menu> menuList) {
-        this.menuList = menuList;
-    }
-
-    public List<Element> getElementList() {
-        return elementList;
-    }
-
-    public void setElementList(List<Element> elementList) {
-        this.elementList = elementList;
-    }
-
-    public List<Operation> getOperationList() {
-        return operationList;
-    }
-
-    public void setOperationList(List<Operation> operationList) {
-        this.operationList = operationList;
     }
 
     @Override
