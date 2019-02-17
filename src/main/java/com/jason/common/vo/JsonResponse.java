@@ -1,13 +1,13 @@
 package com.jason.common.vo;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import com.jason.common.enums.ResponseCode;
 
 import java.io.Serializable;
-import java.util.StringJoiner;
 
-public class JsonResponse extends BaseResponse implements Serializable {
+public class JsonResponse<T> extends BaseResponse implements Serializable {
 
     protected Integer code;
+    protected T data;
 
     public Integer getCode() {
         return code;
@@ -17,12 +17,33 @@ public class JsonResponse extends BaseResponse implements Serializable {
         this.code = code;
     }
 
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
     public JsonResponse() {
     }
 
     public JsonResponse(Integer code,String msg) {
         super(msg);
         this.code = code;
+    }
+
+    public JsonResponse(Integer code, T data) {
+        this.code = code;
+        this.data = data;
+    }
+
+    public static JsonResponse buildSuccess(){
+        return new JsonResponse(ResponseCode.SUCCESS.getCode(),ResponseCode.SUCCESS.getMsg());
+    }
+
+    public static JsonResponse buildFail(){
+        return new JsonResponse(ResponseCode.FAILURE.getCode(),ResponseCode.FAILURE.getMsg());
     }
 
     @Override

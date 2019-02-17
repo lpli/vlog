@@ -8,6 +8,9 @@ import com.jason.module.security.entity.UserAuthority;
 import com.jason.module.security.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +21,7 @@ import java.util.List;
 
 
 @Service
+@CacheConfig(cacheNames = "tokenCache")
 public class UserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
@@ -27,8 +31,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private RoleService roleService;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUserName, s));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userService.getOne(new QueryWrapper<User>().eq("user_name", username));
         if (user == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
@@ -41,5 +45,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
         BeanUtils.copyProperties(user,userDto);
         userDto.setUserAuthorityList(userAuthorities);
         return userDto;
+    }
+
+    @CacheEvict(key = "'user_'+#username")
+    public String removeToken(String username){
+        return "delete cache:"+username;
     }
 }

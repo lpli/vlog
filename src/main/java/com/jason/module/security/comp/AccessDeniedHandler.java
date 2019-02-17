@@ -2,7 +2,6 @@ package com.jason.module.security.comp;
 
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
-import org.omg.PortableServer.ForwardRequestHelper;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.DefaultRedirectStrategy;

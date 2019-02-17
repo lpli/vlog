@@ -1,5 +1,6 @@
 package com.jason.module.security.service;
 
+import com.jason.module.security.dto.MenuDto;
 import com.jason.module.security.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -22,4 +23,10 @@ public interface MenuService extends IService<Menu> {
      */
     List<Menu> getMenuList(List<Long> roleIdList);
 
+
+    /**
+     * 获取菜单
+     * @return
+     */
+    List<MenuDto> getMenu();
 }

@@ -1,11 +1,16 @@
 package com.jason.module.security.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.jason.module.security.dto.MenuDto;
 import com.jason.module.security.entity.Menu;
 import com.jason.module.security.dao.MenuMapper;
 import com.jason.module.security.service.MenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,5 +27,32 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<Menu> getMenuList(List<Long> roleIdList) {
         return baseMapper.queryMenuListByRole(roleIdList);
+    }
+
+    @Override
+    public List<MenuDto> getMenu() {
+        List<Menu> list = baseMapper.selectList(new QueryWrapper<>());
+        List<MenuDto> orgList = new ArrayList<>();
+        for (Menu menu : list) {
+            orgList.add(new MenuDto(menu));
+        }
+        List<MenuDto> rootList = new ArrayList<>();
+        for (MenuDto dto : orgList) {
+            if (dto.getPid() == null) {
+                rootList.add(dto);
+            }
+            for (MenuDto menu : orgList) {
+                if (dto.getId().equals(menu.getPid())) {
+                    if (dto.getChildren() == null) {
+                        List<MenuDto> children = new ArrayList<>();
+                        children.add(menu);
+                        dto.setChildren(children);
+                    } else {
+                        dto.getChildren().add(menu);
+                    }
+                }
+            }
+        }
+        return rootList;
     }
 }

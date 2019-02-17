@@ -1,5 +1,7 @@
 package com.jason.module.security.comp;
 
+import com.jason.module.security.filter.AjaxUserPasswordFilter;
+import com.jason.module.security.filter.ContentFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +10,7 @@ import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,10 +19,15 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.DigestUtils;
 
 import java.util.Arrays;
@@ -39,8 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private MessageSource messageSource;
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
-    @Autowired
-    private FailureAuthenticationHandler failureAuthenticationHandler;
+
 
     @Autowired
     private CustSecurityMetadataSource securityMetadataSource;
@@ -88,13 +95,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/login","/403")
-                .permitAll().anyRequest().authenticated().and().formLogin().loginPage("/login")
-                .usernameParameter("username").passwordParameter("password").failureHandler(failureAuthenticationHandler)
-                .and().logout().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler).and().csrf().disable();
+                .permitAll().anyRequest().authenticated().and().formLogin().loginPage("/loginPage")
+                .successHandler(authenticationSuccessHandler()).failureHandler(authenticationFailureHandler()).and().logout()
+                .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler).and().csrf().disable();
         FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
         filterSecurityInterceptor.setSecurityMetadataSource(securityMetadataSource);
         filterSecurityInterceptor.setAccessDecisionManager(new AffirmativeBased(Arrays.asList(new WebExpressionVoter())));
+        http.addFilterAt(myUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterAt(filterSecurityInterceptor,filterSecurityInterceptor.getClass());
+        http.addFilterBefore(new ContentFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
+
+    @Bean
+    public UsernamePasswordAuthenticationFilter myUsernamePasswordAuthenticationFilter() throws Exception {
+        AjaxUserPasswordFilter ajaxUserPasswordFilter =  new AjaxUserPasswordFilter();
+        ajaxUserPasswordFilter.setAuthenticationManager(authenticationManagerBean());
+        ajaxUserPasswordFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
+        ajaxUserPasswordFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
+        return ajaxUserPasswordFilter;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+
+    public AuthenticationFailureHandler authenticationFailureHandler(){
+        return new FailureAuthenticationHandler();
+    }
+
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new SuccessAuthenticationHandler();
+    }
 }

@@ -1,14 +1,19 @@
 package com.jason.module.security.controller;
 
+import com.jason.module.security.entity.User;
+import com.jason.module.security.util.HttpUtil;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.HttpMediaTypeException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import sun.plugin.liveconnect.SecurityContextHelper;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class IndexController {
@@ -16,10 +21,12 @@ public class IndexController {
      * 登录页面
      * @return
      */
-    @GetMapping(value = "/login",produces = "text/html")
+    @GetMapping(value = "/loginPage",produces = "text/html")
     public String loginPage(){
         return "login";
     }
+
+
 
 
     /**
