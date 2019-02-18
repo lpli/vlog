@@ -2,6 +2,7 @@ package com.jason.module.security.comp;
 
 import com.jason.module.security.filter.AjaxUserPasswordFilter;
 import com.jason.module.security.filter.ContentFilter;
+import com.jason.module.security.service.impl.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserDetailServiceImpl userDetailServiceImpl;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -127,6 +131,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public AuthenticationSuccessHandler authenticationSuccessHandler(){
-        return new SuccessAuthenticationHandler();
+        return new SuccessAuthenticationHandler(userDetailServiceImpl);
     }
 }

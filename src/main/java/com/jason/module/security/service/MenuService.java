@@ -16,6 +16,8 @@ import java.util.List;
  */
 public interface MenuService extends IService<Menu> {
 
+    void saveMenu(Menu menu);
+
     /**
      * 查询菜单
      * @param roleIdList

@@ -29,7 +29,7 @@ public class MenuController {
 
     @PostMapping("/")
     public JsonResponse create(@RequestBody Menu menu) {
-        menuService.save(menu);
+        menuService.saveMenu(menu);
         return JsonResponse.buildSuccess();
 
     }

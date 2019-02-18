@@ -5,11 +5,14 @@ import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.entity.Role;
 import com.jason.module.security.entity.User;
 import com.jason.module.security.entity.UserAuthority;
-import com.jason.module.security.service.*;
+import com.jason.module.security.service.RoleService;
+import com.jason.module.security.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +25,7 @@ import java.util.List;
 
 @Service
 @CacheConfig(cacheNames = "tokenCache")
+@Slf4j
 public class UserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
@@ -42,13 +46,43 @@ public class UserDetailServiceImpl implements UserDetailsService {
             userAuthorities.add(new UserAuthority(role));
         });
         UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(user,userDto);
+        BeanUtils.copyProperties(user,userDto,"password");
         userDto.setUserAuthorityList(userAuthorities);
         return userDto;
     }
 
-    @CacheEvict(key = "'user_'+#username")
-    public String removeToken(String username){
-        return "delete cache:"+username;
+    /**
+     * token缓存
+     * @param token
+     * @param username
+     * @return
+     */
+    @CachePut(value="tokenCache",key="#token")
+    public UserDetails saveToken(String token,String username){
+        UserDetails userDetails = loadUserByUsername(username);
+        log.info("放入token缓存:{0},username:{1}",token,username);
+        return userDetails;
+    }
+
+    /**
+     * 获取缓存
+     * @param token
+     * @return
+     */
+    @Cacheable(value = "tokenCache",key = "#token")
+    public UserDetails getToken(String token){
+        log.info("获取缓存token:{0}",token);
+        return null;
+    }
+
+    /**
+     * 缓存清理
+     * @param token
+     * @return
+     */
+    @CacheEvict(key = "#token",value = "tokenCache")
+    public String removeToken(String token){
+        log.info("清理缓存token:{0}",token);
+        return token;
     }
 }

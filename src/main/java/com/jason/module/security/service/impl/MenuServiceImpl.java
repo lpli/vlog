@@ -4,8 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.module.security.dto.MenuDto;
 import com.jason.module.security.entity.Menu;
 import com.jason.module.security.dao.MenuMapper;
+import com.jason.module.security.entity.Permission;
+import com.jason.module.security.entity.PermissionMenuRe;
+import com.jason.module.security.enums.PermissionType;
 import com.jason.module.security.service.MenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jason.module.security.service.PermissionMenuReService;
+import com.jason.module.security.service.PermissionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +29,26 @@ import java.util.List;
  */
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
+
+    @Autowired
+    private PermissionService permissionService;
+
+
+    @Autowired
+    private PermissionMenuReService permissionMenuReService;
+
+
+    @Override
+    public void saveMenu(Menu menu) {
+        Permission permission = new Permission();
+        permission.setType(PermissionType.MENU.getCode());
+        permissionService.save(permission);
+        baseMapper.insert(menu);
+        PermissionMenuRe permissionMenuRe = new PermissionMenuRe();
+        permissionMenuRe.setMenuId(menu.getId());
+        permissionMenuRe.setPermissionId(permission.getId());
+        permissionMenuReService.save(permissionMenuRe);
+    }
 
     @Override
     public List<Menu> getMenuList(List<Long> roleIdList) {
