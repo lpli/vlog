@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * <p>
- * 菜单表 服务实现类
+ * 菜单 服务实现类
  * </p>
  *
  * @author lpli
@@ -48,6 +48,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         permissionMenuRe.setMenuId(menu.getId());
         permissionMenuRe.setPermissionId(permission.getId());
         permissionMenuReService.save(permissionMenuRe);
+    }
+
+    @Override
+    public void deleteMenu(Long id) {
+        PermissionMenuRe permissionMenuRe = permissionMenuReService.getOne(new QueryWrapper<PermissionMenuRe>().eq("menu_id",id));
+        if(permissionMenuRe!=null){
+            permissionService.remove(new QueryWrapper<Permission>().eq("id",permissionMenuRe.getPermissionId()));
+        }
+        baseMapper.delete(new QueryWrapper<Menu>().eq("id",id));
+    }
+
+    @Override
+    public void updateMenu(Menu menu) {
+        baseMapper.updateById(menu);
     }
 
     @Override

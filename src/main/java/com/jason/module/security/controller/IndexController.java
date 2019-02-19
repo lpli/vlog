@@ -21,7 +21,7 @@ public class IndexController {
      * 登录页面
      * @return
      */
-    @GetMapping(value = "/loginPage",produces = "text/html")
+    @GetMapping(value = "/login",produces = "text/html")
     public String loginPage(){
         return "login";
     }

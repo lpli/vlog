@@ -17,16 +17,17 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Service
+@Component
 @CacheConfig(cacheNames = "tokenCache")
 @Slf4j
-public class UserDetailServiceImpl implements UserDetailsService {
+public class TokenUserDetailService implements UserDetailsService {
 
     @Autowired
     private UserService userService;
@@ -46,7 +47,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
             userAuthorities.add(new UserAuthority(role));
         });
         UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(user,userDto,"password");
+        BeanUtils.copyProperties(user,userDto);
         userDto.setUserAuthorityList(userAuthorities);
         return userDto;
     }

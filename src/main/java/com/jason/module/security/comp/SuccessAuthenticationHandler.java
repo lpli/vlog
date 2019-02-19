@@ -2,8 +2,7 @@ package com.jason.module.security.comp;
 
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
-import com.jason.module.security.service.impl.UserDetailServiceImpl;
-import com.jason.module.security.service.impl.UserServiceImpl;
+import com.jason.module.security.service.impl.TokenUserDetailService;
 import com.jason.module.security.util.HttpUtil;
 import com.jason.module.security.util.TokenUtil;
 import org.springframework.http.MediaType;
@@ -18,9 +17,9 @@ import java.io.IOException;
 
 public class SuccessAuthenticationHandler implements AuthenticationSuccessHandler {
 
-    private UserDetailServiceImpl userService;
+    private TokenUserDetailService userService;
 
-    public SuccessAuthenticationHandler(UserDetailServiceImpl userService) {
+    public SuccessAuthenticationHandler(TokenUserDetailService userService) {
         this.userService = userService;
     }
 

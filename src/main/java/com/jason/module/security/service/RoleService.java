@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务类
+ *  角色服务类
  * </p>
  *
  * @author lpli
@@ -18,4 +18,5 @@ public interface RoleService extends IService<Role> {
     List<Role> getRoleList(Long userId);
 
     List<Role> getRoleListByOpId(Long operationId);
+
 }

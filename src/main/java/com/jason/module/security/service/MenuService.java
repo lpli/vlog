@@ -18,6 +18,12 @@ public interface MenuService extends IService<Menu> {
 
     void saveMenu(Menu menu);
 
+
+    void deleteMenu(Long id);
+
+
+    void updateMenu(Menu menu);
+
     /**
      * 查询菜单
      * @param roleIdList

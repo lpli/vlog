@@ -27,7 +27,7 @@ public class MenuController {
     @Autowired
     private MenuService menuService;
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public JsonResponse create(@RequestBody Menu menu) {
         menuService.saveMenu(menu);
         return JsonResponse.buildSuccess();
@@ -35,7 +35,7 @@ public class MenuController {
     }
 
 
-    @DeleteMapping("/:id")
+    @DeleteMapping("/{id}/delete")
     public JsonResponse delete(@PathVariable("id") Long id) {
         menuService.remove(new QueryWrapper<Menu>().eq("id", id));
         return JsonResponse.buildSuccess();
@@ -43,7 +43,7 @@ public class MenuController {
     }
 
 
-    @PutMapping("/")
+    @PutMapping("/update")
     public JsonResponse put(@RequestBody Menu menu) {
         JsonResponse response = JsonResponse.buildFail();
         if (menu.getId() != null) {

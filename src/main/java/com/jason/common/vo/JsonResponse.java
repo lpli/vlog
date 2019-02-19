@@ -38,12 +38,17 @@ public class JsonResponse<T> extends BaseResponse implements Serializable {
         this.data = data;
     }
 
+
     public static JsonResponse buildSuccess(){
         return new JsonResponse(ResponseCode.SUCCESS.getCode(),ResponseCode.SUCCESS.getMsg());
     }
 
     public static JsonResponse buildFail(){
         return new JsonResponse(ResponseCode.FAILURE.getCode(),ResponseCode.FAILURE.getMsg());
+    }
+
+    public static JsonResponse buildFail(String msg){
+        return new JsonResponse(ResponseCode.FAILURE.getCode(),msg);
     }
 
     @Override
