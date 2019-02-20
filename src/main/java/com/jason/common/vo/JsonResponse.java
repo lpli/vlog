@@ -56,6 +56,8 @@ public class JsonResponse<T> extends BaseResponse implements Serializable {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"code\":")
                 .append(code);
+        sb.append(",\"data\":")
+                .append(data);
         sb.append(",\"msg\":\"")
                 .append(msg).append('\"');
         sb.append('}');

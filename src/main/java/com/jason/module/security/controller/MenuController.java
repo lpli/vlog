@@ -59,5 +59,6 @@ public class MenuController {
         List<MenuDto> list = menuService.getMenu();
         return new JsonResponse<>(ResponseCode.SUCCESS.getCode(),list);
     }
+
 }
 

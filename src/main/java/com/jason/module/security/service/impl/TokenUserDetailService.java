@@ -61,7 +61,7 @@ public class TokenUserDetailService implements UserDetailsService {
     @CachePut(value="tokenCache",key="#token")
     public UserDetails saveToken(String token,String username){
         UserDetails userDetails = loadUserByUsername(username);
-        log.info("放入token缓存:{0},username:{1}",token,username);
+        log.info("放入token缓存:{},username:{}",token,username);
         return userDetails;
     }
 
@@ -72,7 +72,7 @@ public class TokenUserDetailService implements UserDetailsService {
      */
     @Cacheable(value = "tokenCache",key = "#token")
     public UserDetails getToken(String token){
-        log.info("获取缓存token:{0}",token);
+        log.info("获取缓存token:{}",token);
         return null;
     }
 
@@ -83,7 +83,7 @@ public class TokenUserDetailService implements UserDetailsService {
      */
     @CacheEvict(key = "#token",value = "tokenCache")
     public String removeToken(String token){
-        log.info("清理缓存token:{0}",token);
+        log.info("清理缓存token:{}",token);
         return token;
     }
 }

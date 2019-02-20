@@ -78,7 +78,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
         List<MenuDto> rootList = new ArrayList<>();
         for (MenuDto dto : orgList) {
-            if (dto.getPid() == null) {
+            if (dto.getPid() == 0) {
                 rootList.add(dto);
             }
             for (MenuDto menu : orgList) {

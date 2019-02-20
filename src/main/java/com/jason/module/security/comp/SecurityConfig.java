@@ -88,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/login","/403")
                 .permitAll().anyRequest().authenticated().and().formLogin().loginPage("/login")
-                .successHandler(authenticationSuccessHandler()).failureHandler(authenticationFailureHandler()).and().logout()
+                .successHandler(authenticationSuccessHandler()).failureHandler(authenticationFailureHandler()).and().logout().logoutUrl("/logout")
                 .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler).and().csrf().disable();
         FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
         filterSecurityInterceptor.setSecurityMetadataSource(securityMetadataSource);
