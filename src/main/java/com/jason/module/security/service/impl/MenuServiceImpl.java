@@ -11,6 +11,7 @@ import com.jason.module.security.service.MenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jason.module.security.service.PermissionMenuReService;
 import com.jason.module.security.service.PermissionService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,11 +53,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public void deleteMenu(Long id) {
-        PermissionMenuRe permissionMenuRe = permissionMenuReService.getOne(new QueryWrapper<PermissionMenuRe>().eq("menu_id",id));
-        if(permissionMenuRe!=null){
-            permissionService.remove(new QueryWrapper<Permission>().eq("id",permissionMenuRe.getPermissionId()));
+        PermissionMenuRe permissionMenuRe = permissionMenuReService.getOne(new QueryWrapper<PermissionMenuRe>().eq("menu_id", id));
+        if (permissionMenuRe != null) {
+            permissionService.remove(new QueryWrapper<Permission>().eq("id", permissionMenuRe.getPermissionId()));
         }
-        baseMapper.delete(new QueryWrapper<Menu>().eq("id",id));
+        baseMapper.delete(new QueryWrapper<Menu>().eq("id", id));
     }
 
     @Override
@@ -65,17 +66,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public List<Menu> getMenuList(List<Long> roleIdList) {
-        return baseMapper.queryMenuListByRole(roleIdList);
+    public List<MenuDto> getMenuList(List<Long> roleIdList) {
+        List<MenuDto> list = baseMapper.queryMenuListByRole(roleIdList);
+        return getTree(list);
     }
 
     @Override
     public List<MenuDto> getMenu() {
-        List<Menu> list = baseMapper.selectList(new QueryWrapper<>());
-        List<MenuDto> orgList = new ArrayList<>();
-        for (Menu menu : list) {
-            orgList.add(new MenuDto(menu));
-        }
+        List<MenuDto> orgList = baseMapper.queryAllMenu();
+        return getTree(orgList);
+    }
+
+    private List<MenuDto> getTree(List<MenuDto> orgList) {
         List<MenuDto> rootList = new ArrayList<>();
         for (MenuDto dto : orgList) {
             if (dto.getPid() == 0) {
@@ -92,7 +94,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                     }
                 }
             }
+            if (dto.getChildren() != null && !dto.getChildren().isEmpty()) {
+                Collections.sort(dto.getChildren());
+            }
         }
+        Collections.sort(rootList);
         return rootList;
     }
 }

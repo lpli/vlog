@@ -1,20 +1,27 @@
 package com.jason.module.security.controller;
 
-import com.jason.module.security.service.impl.TokenUserDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.jason.module.security.entity.UserAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseController {
 
-    @Autowired
-    private TokenUserDetailService tokenUserDetailService;
 
-    protected UserDetails getTokenInfo(HttpServletRequest request, HttpServletResponse response){
-
-
-        return null;
+    protected UserDetails getTokenInfo(){
+        return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
     }
+
+    protected List<Long> getRoleIds(){
+        UserDetails userDetails =  getTokenInfo();
+        List<UserAuthority> userAuthorities = (List<UserAuthority>) userDetails.getAuthorities();
+        List<Long> roleIds = new ArrayList<>();
+        for(UserAuthority userAuthority:userAuthorities){
+            roleIds.add(userAuthority.getRole().getId());
+        }
+        return roleIds;
+    }
+
 }

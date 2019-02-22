@@ -33,8 +33,14 @@ public class JsonResponse<T> extends BaseResponse implements Serializable {
         this.code = code;
     }
 
-    public JsonResponse(Integer code, T data) {
+    public JsonResponse(Integer code, String msg,T data) {
         this.code = code;
+        this.data = data;
+    }
+
+    public JsonResponse(ResponseCode responseCode,T data) {
+        this.code = responseCode.getCode();
+        this.msg = responseCode.getMsg();
         this.data = data;
     }
 

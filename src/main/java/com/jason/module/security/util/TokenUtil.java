@@ -1,5 +1,6 @@
 package com.jason.module.security.util;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -39,4 +40,7 @@ public class TokenUtil {
         return md5str.toString().toUpperCase();
     }
 
+    public static String getToken(HttpServletRequest request){
+       return request.getHeader("EV-Token");
+    }
 }

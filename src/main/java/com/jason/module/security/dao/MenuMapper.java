@@ -1,6 +1,7 @@
 package com.jason.module.security.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.jason.module.security.dto.MenuDto;
 import com.jason.module.security.entity.Menu;
 
 import java.util.List;
@@ -14,5 +15,7 @@ import java.util.List;
  * @since 2019-01-05
  */
 public interface MenuMapper extends BaseMapper<Menu> {
-    List<Menu> queryMenuListByRole(List<Long> roleIdList);
+    List<MenuDto> queryMenuListByRole(List<Long> roleIdList);
+
+    List<MenuDto> queryAllMenu();
 }

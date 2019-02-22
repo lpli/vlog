@@ -89,9 +89,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/login","/403")
                 .permitAll().anyRequest().authenticated().and().formLogin().loginPage("/login")
                 .successHandler(authenticationSuccessHandler()).failureHandler(authenticationFailureHandler()).and().logout().logoutUrl("/logout")
+                .logoutSuccessHandler(new LogoutHandler(tokenUserDetailService))
                 .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler).and().csrf().disable();
         FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
+        //加载需要权限校验的资源
         filterSecurityInterceptor.setSecurityMetadataSource(securityMetadataSource);
+        //判断是否可以访问
         filterSecurityInterceptor.setAccessDecisionManager(new AffirmativeBased(Arrays.asList(new WebExpressionVoter())));
         http.addFilterAt(myUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new ContentFilter(), UsernamePasswordAuthenticationFilter.class);

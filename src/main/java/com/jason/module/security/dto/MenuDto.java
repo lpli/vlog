@@ -4,7 +4,7 @@ import com.jason.module.security.entity.Menu;
 
 import java.util.List;
 
-public class MenuDto extends Menu {
+public class MenuDto extends Menu implements Comparable<MenuDto> {
 
     public MenuDto() {
 
@@ -26,5 +26,10 @@ public class MenuDto extends Menu {
 
     public void setChildren(List<MenuDto> children) {
         this.children = children;
+    }
+
+    @Override
+    public int compareTo(MenuDto o) {
+        return this.getSeq().compareTo(o.getSeq());
     }
 }

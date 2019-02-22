@@ -42,5 +42,4 @@ public class IndexController {
     public String forbidden(){
         return "forbidden";
     }
-
 }

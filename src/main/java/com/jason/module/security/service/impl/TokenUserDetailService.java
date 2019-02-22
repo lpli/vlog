@@ -1,5 +1,6 @@
 package com.jason.module.security.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.entity.Role;
@@ -61,7 +62,7 @@ public class TokenUserDetailService implements UserDetailsService {
     @CachePut(value="tokenCache",key="#token")
     public UserDetails saveToken(String token,String username){
         UserDetails userDetails = loadUserByUsername(username);
-        log.info("放入token缓存:{},username:{}",token,username);
+        log.info("放入token缓存:{},username:{}",token,JSONObject.toJSONString(userDetails));
         return userDetails;
     }
 

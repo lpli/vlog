@@ -29,7 +29,7 @@ public interface MenuService extends IService<Menu> {
      * @param roleIdList
      * @return
      */
-    List<Menu> getMenuList(List<Long> roleIdList);
+    List<MenuDto> getMenuList(List<Long> roleIdList);
 
 
     /**

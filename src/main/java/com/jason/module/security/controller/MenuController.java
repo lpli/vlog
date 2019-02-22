@@ -8,8 +8,11 @@ import com.jason.module.security.dto.MenuDto;
 import com.jason.module.security.entity.Menu;
 import com.jason.module.security.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -22,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/menu")
-public class MenuController {
+public class MenuController extends BaseController{
 
     @Autowired
     private MenuService menuService;
@@ -31,7 +34,6 @@ public class MenuController {
     public JsonResponse create(@RequestBody Menu menu) {
         menuService.saveMenu(menu);
         return JsonResponse.buildSuccess();
-
     }
 
 
@@ -54,10 +56,22 @@ public class MenuController {
         return JsonResponse.buildSuccess();
     }
 
+    @GetMapping("/all")
+    public JsonResponse<List<MenuDto>> all(){
+        List<MenuDto> list = menuService.getMenu();
+        return new JsonResponse<>(ResponseCode.SUCCESS,list);
+    }
+
     @GetMapping("/list")
     public JsonResponse<List<MenuDto>> list(){
-        List<MenuDto> list = menuService.getMenu();
-        return new JsonResponse<>(ResponseCode.SUCCESS.getCode(),list);
+
+        List<Long> roleIds = this.getRoleIds();
+        if(roleIds.isEmpty()){
+           return new JsonResponse<>(ResponseCode.SUCCESS,null);
+        }
+        List<MenuDto> list = menuService.getMenuList(roleIds);
+        JsonResponse<List<MenuDto>> json = new JsonResponse<>(ResponseCode.SUCCESS,list);
+        return json;
     }
 
 }
