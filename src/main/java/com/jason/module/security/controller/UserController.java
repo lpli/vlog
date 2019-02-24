@@ -6,10 +6,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.entity.User;
+import com.jason.module.security.entity.UserGroup;
+import com.jason.module.security.service.UserGroupService;
 import com.jason.module.security.service.UserService;
+import com.jason.module.security.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * <p>
@@ -26,6 +35,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Value("${app.default-password}")
+    private String defaultPassword;
+
+    @Autowired
+    @Qualifier("myPasswordEncoder")
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserGroupService userGroupService;
     /**
      * 分页查询
      * @param pageSize
@@ -49,26 +67,36 @@ public class UserController {
 
     /**
      * 添加用户
-     * @param user
+     * @param userDto
      * @return
      */
     @PostMapping("/create")
-    public JsonResponse add(User user){
-        userService.saveUser(user);
+    public JsonResponse add(@RequestBody UserDto userDto){
+        userDto.setCreateTime(new Date());
+        userDto.setPassword(passwordEncoder.encode(defaultPassword));
+        return user(userDto,userDto.getGroupId());
+    }
+
+    private JsonResponse user(UserDto userDto,Long groupId){
+        if(userDto.getGroupId() == null){
+            return new JsonResponse(ResponseCode.FAILURE.getCode(),"用户组不能为空");
+        }
+        UserGroup userGroup = new UserGroup();
+        userGroup.setId(groupId);
+        userService.saveUser(userDto,userGroup);
         return JsonResponse.buildSuccess();
     }
 
 
     @PutMapping("/update")
-    public JsonResponse update(User user){
+    public JsonResponse update(@RequestBody UserDto userDto){
         JsonResponse jsonResponse = new JsonResponse();
-        if(user.getId() == null){
+        if(userDto.getId() == null){
             jsonResponse.setCode(ResponseCode.FAILURE.getCode());
             jsonResponse.setMsg("用户id不能为空");
             return jsonResponse;
         }
-        userService.updateById(user);
-        return JsonResponse.buildSuccess();
+        return user(userDto,userDto.getGroupId());
     }
 
     /**
@@ -90,6 +118,12 @@ public class UserController {
         user.setId(id);
         userService.disableUser(user);
         return JsonResponse.buildSuccess();
+    }
+
+    @GetMapping("/{username}/group")
+    public JsonResponse<UserGroup> getGroup(@PathVariable("username")String  username){
+        UserGroup userGroup = userGroupService.getGroup(username);
+        return new JsonResponse<>(ResponseCode.SUCCESS,userGroup);
     }
 
 

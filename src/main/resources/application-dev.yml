@@ -1,5 +1,7 @@
 server:
   port: 9000
+app:
+  default-password: 123456
 spring:
   profiles: dev
   cache:
@@ -54,9 +56,11 @@ mybatis-plus:
   type-aliases-package: com.jason.module.security.entity
   # 检测mybatis配置文件是否存在
   check-config-location: false
+
   configuration:
     # 驼峰装换
     map-underscore-to-camel-case: true
+
 
   global-config:
     # 刷新mapper文件修改 用于开发环境
@@ -64,6 +68,7 @@ mybatis-plus:
     # 逻辑删除配置
     logic-delete-value: 0
     logic-not-delete-value: 1
+
 
 
 

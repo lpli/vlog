@@ -1,7 +1,10 @@
 package com.jason.module.security.dao;
 
+import com.jason.module.security.dto.GroupDto;
 import com.jason.module.security.entity.UserGroup;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserGroupMapper extends BaseMapper<UserGroup> {
 
+    List<GroupDto> selectListByPid(Long pid);
+
+    UserGroup selectOneByUsername(String username);
 }

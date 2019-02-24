@@ -6,7 +6,9 @@ import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.entity.Role;
 import com.jason.module.security.entity.User;
 import com.jason.module.security.entity.UserAuthority;
+import com.jason.module.security.entity.UserGroup;
 import com.jason.module.security.service.RoleService;
+import com.jason.module.security.service.UserGroupService;
 import com.jason.module.security.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -15,6 +17,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +39,9 @@ public class TokenUserDetailService implements UserDetailsService {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private UserGroupService userGroupService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.getOne(new QueryWrapper<User>().eq("user_name", username));
@@ -47,23 +53,25 @@ public class TokenUserDetailService implements UserDetailsService {
         roleList.forEach((role) -> {
             userAuthorities.add(new UserAuthority(role));
         });
+        UserGroup userGroup = userGroupService.getGroup(username);
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(user,userDto);
+        userDto.setUserGroup(userGroup);
         userDto.setUserAuthorityList(userAuthorities);
         return userDto;
     }
 
+
     /**
      * token缓存
      * @param token
-     * @param username
+     * @param userDto
      * @return
      */
     @CachePut(value="tokenCache",key="#token")
-    public UserDetails saveToken(String token,String username){
-        UserDetails userDetails = loadUserByUsername(username);
-        log.info("放入token缓存:{},username:{}",token,JSONObject.toJSONString(userDetails));
-        return userDetails;
+    public UserDto saveToken(String token, UserDto userDto){
+        log.info("放入token缓存:{},username:{}",token,JSONObject.toJSONString(userDto));
+        return userDto;
     }
 
     /**
@@ -72,7 +80,7 @@ public class TokenUserDetailService implements UserDetailsService {
      * @return
      */
     @Cacheable(value = "tokenCache",key = "#token")
-    public UserDetails getToken(String token){
+    public UserDto getToken(String token){
         log.info("获取缓存token:{}",token);
         return null;
     }

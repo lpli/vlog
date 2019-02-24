@@ -4,15 +4,34 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.jason.module.security.entity.UserGroup">
-        <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="pid" property="pid" />
-        <result column="desc" property="desc" />
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="pid" property="pid"/>
+        <result column="desc" property="desc"/>
     </resultMap>
+
+    <resultMap id="DtoResultMap" type="com.jason.module.security.dto.GroupDto">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="pid" property="pid"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, pid, desc
+        id, name, pid, remark
     </sql>
+
+    <select id="selectListByPid" parameterType="java.lang.Long" resultMap="DtoResultMap">
+        select * from user_group where FIND_IN_SET(id, getChildLst(#{pid}));
+    </select>
+
+    <select id="selectOneByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select ug.* from user_group ug
+ left join user_group_re ugr on ugr.group_id = ug.id
+ LEFT JOIN user u on u.id = ugr.user_id
+ where u.user_name = #{username}
+    </select>
 
 </mapper>

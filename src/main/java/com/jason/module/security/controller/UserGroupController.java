@@ -4,6 +4,7 @@ package com.jason.module.security.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.security.dto.GroupDto;
 import com.jason.module.security.entity.UserGroup;
 import com.jason.module.security.entity.UserGroupRe;
 import com.jason.module.security.entity.UserGroupRoleRe;
@@ -27,7 +28,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/group")
-public class UserGroupController {
+public class UserGroupController extends BaseController{
 
     @Autowired
     private UserGroupService userGroupService;
@@ -36,19 +37,23 @@ public class UserGroupController {
     private UserGroupReService userGroupReService;
 
     @PostMapping("/create")
-    public JsonResponse create(UserGroup userGroup) {
+    public JsonResponse create(@RequestBody UserGroup userGroup) {
+        if(userGroup.getPid() == 0){
+            Long pid = getToken().getUserGroup().getId();
+            userGroup.setPid(pid);
+        }
         userGroupService.save(userGroup);
         return JsonResponse.buildSuccess();
     }
 
     @PutMapping("/update")
-    public JsonResponse update(UserGroup userGroup) {
+    public JsonResponse update(@RequestBody UserGroup userGroup) {
         userGroupService.updateById(userGroup);
         return JsonResponse.buildSuccess();
     }
 
     @DeleteMapping("/{id}/delete")
-    public JsonResponse delete(Long id) {
+    public JsonResponse delete(@PathVariable("id") Long id) {
         int ugcount = userGroupReService.count(new QueryWrapper<UserGroupRe>().eq("group_id", id));
         if(ugcount>0){
             return JsonResponse.buildFail("有关联用户");
@@ -58,9 +63,10 @@ public class UserGroupController {
     }
 
     @GetMapping("/list")
-    public JsonResponse<List<UserGroup>> list(){
-        JsonResponse<List<UserGroup>> json  = new JsonResponse<>();
-        List<UserGroup> list = userGroupService.list();
+    public JsonResponse<List<GroupDto>> list(){
+        Long pid = this.getToken().getUserGroup().getId();
+        JsonResponse<List<GroupDto>> json  = new JsonResponse<>();
+        List<GroupDto> list = userGroupService.getGroupListByPid(pid);
         json.setCode(ResponseCode.SUCCESS.getCode());
         json.setData(list);
         return json;

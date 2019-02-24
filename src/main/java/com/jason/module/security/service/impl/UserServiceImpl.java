@@ -29,8 +29,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void saveUser(User user, UserGroup userGroup) {
-        baseMapper.insert(user);
+        this.saveOrUpdate(user);
         if (userGroup != null) {
+            userGroupReService.remove(new QueryWrapper<UserGroupRe>().eq("user_id",user.getId()));
             UserGroupRe userGroupRe = new UserGroupRe();
             userGroupRe.setGroupId(userGroup.getId());
             userGroupRe.setUserId(user.getId());

@@ -1,6 +1,9 @@
 package com.jason.module.security.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+
 import java.io.Serializable;
 
 /**
@@ -44,8 +47,8 @@ public class UserGroupRe extends Model<UserGroupRe> {
     @Override
     public String toString() {
         return "UserGroupRe{" +
-        "userId=" + userId +
-        ", groupId=" + groupId +
-        "}";
+                "userId=" + userId +
+                ", groupId=" + groupId +
+                "}";
     }
 }

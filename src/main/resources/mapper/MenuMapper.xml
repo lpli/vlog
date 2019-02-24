@@ -26,11 +26,11 @@
 
     <select id="queryMenuListByRole" parameterType="java.util.List" resultMap="DtoResultMap">
        select m.* from role_permission_re rp
-       left join  permission per on per.id = rp.permission and per.type = 1
+       left join  permission per on per.id = rp.permission_id and per.type = 1
        left join  permission_menu_re pm on pm.permission_id = per.id
        left join menu m on m.id = pm.menu_id
        where rp.role_id in
-       <foreach collection="roleIdList" open="(" close=")" item="item" separator=",">
+       <foreach collection="list" open="(" close=")" item="item" separator=",">
            #{item}
        </foreach>
     </select>

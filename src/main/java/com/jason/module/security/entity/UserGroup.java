@@ -1,5 +1,7 @@
 package com.jason.module.security.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.io.Serializable;
 
@@ -15,6 +17,7 @@ public class UserGroup extends Model<UserGroup> {
 
     private static final long serialVersionUID = 1L;
 
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -27,7 +30,7 @@ public class UserGroup extends Model<UserGroup> {
      */
     private Long pid;
 
-    private String desc;
+    private String remark;
 
 
     public Long getId() {
@@ -54,12 +57,12 @@ public class UserGroup extends Model<UserGroup> {
         this.pid = pid;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class UserGroup extends Model<UserGroup> {
         "id=" + id +
         ", name=" + name +
         ", pid=" + pid +
-        ", desc=" + desc +
+        ", remark=" + remark +
         "}";
     }
 }

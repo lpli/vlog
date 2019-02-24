@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -32,8 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private TokenUserDetailService tokenUserDetailService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private MessageSource messageSource;
@@ -41,13 +40,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AccessDeniedHandler accessDeniedHandler;
 
 
-    @Autowired
-    private CustSecurityMetadataSource securityMetadataSource;
     /**
      * 密码加密
      * @return
      */
-    @Bean
+    @Bean("myPasswordEncoder")
     public PasswordEncoder passwordEncoder(){
         return new PasswordEncoder() {
             @Override
@@ -72,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         DaoAuthenticationProvider authenticationProvider =  new DaoAuthenticationProvider();
         authenticationProvider.setMessageSource(messageSource);
         authenticationProvider.setUserDetailsService(tokenUserDetailService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
         auth.authenticationProvider(authenticationProvider);
     }
 
@@ -91,32 +88,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(authenticationSuccessHandler()).failureHandler(authenticationFailureHandler()).and().logout().logoutUrl("/logout")
                 .logoutSuccessHandler(new LogoutHandler(tokenUserDetailService))
                 .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler).and().csrf().disable();
-        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
-        //加载需要权限校验的资源
-        filterSecurityInterceptor.setSecurityMetadataSource(securityMetadataSource);
-        //判断是否可以访问
-        filterSecurityInterceptor.setAccessDecisionManager(new AffirmativeBased(Arrays.asList(new WebExpressionVoter())));
         http.addFilterAt(myUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new ContentFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAt(filterSecurityInterceptor,filterSecurityInterceptor.getClass());
     }
 
 
-    @Bean
     public UsernamePasswordAuthenticationFilter myUsernamePasswordAuthenticationFilter() throws Exception {
         AjaxUserPasswordFilter ajaxUserPasswordFilter =  new AjaxUserPasswordFilter();
+        ajaxUserPasswordFilter.setTokenUserDetailService(tokenUserDetailService);
         ajaxUserPasswordFilter.setAuthenticationManager(authenticationManagerBean());
         ajaxUserPasswordFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
         ajaxUserPasswordFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
         return ajaxUserPasswordFilter;
     }
 
-
+    @Bean
     public AuthenticationFailureHandler authenticationFailureHandler(){
         return new FailureAuthenticationHandler();
     }
 
+    @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler(){
         return new SuccessAuthenticationHandler(tokenUserDetailService);
     }
+
 }

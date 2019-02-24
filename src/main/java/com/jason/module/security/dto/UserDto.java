@@ -11,9 +11,21 @@ public class UserDto extends User implements UserDetails {
 
     private List<UserAuthority> userAuthorityList;
 
+    private UserGroup userGroup;
+
+    private Long groupId;
+
 
     public void setUserAuthorityList(List<UserAuthority> userAuthorityList) {
         this.userAuthorityList = userAuthorityList;
+    }
+
+    public UserGroup getUserGroup() {
+        return userGroup;
+    }
+
+    public void setUserGroup(UserGroup userGroup) {
+        this.userGroup = userGroup;
     }
 
     @Override
@@ -43,6 +55,14 @@ public class UserDto extends User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.getEnable();
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 }

@@ -1,8 +1,11 @@
 package com.jason.module.security.service;
 
+import com.jason.module.security.dto.GroupDto;
 import com.jason.module.security.entity.Role;
 import com.jason.module.security.entity.UserGroup;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -27,4 +30,13 @@ public interface UserGroupService extends IService<UserGroup> {
      * @param role
      */
     void removeRole(UserGroup userGroup,Role role);
+
+
+    /**
+     * 获取下属组
+     * @param pid 父id
+     * @return
+     */
+    List<GroupDto> getGroupListByPid(Long pid);
+    UserGroup getGroup(String username);
 }

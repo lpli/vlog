@@ -16,24 +16,24 @@
 
     <!--查询用户-角色关联表下的role-->
     <select id="queryRoleByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select b.* from user_role_r a
-        left join role b on a.role_id = b.id
-        where user_id = #{userId}
+        select b.* from role b
+			left join user_role_r a on a.role_id = b.id
+			where a.user_id = #{userId}
     </select>
     <!--查询用户组-角色关联下的role-->
     <select id="queryGroupRoleListByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select r.* from user_group_re ug
-        left join user_group_role_re re on re.group_id = ug.group_id
-        left join role r on re.role_id = r.id
-        where ug.user_id = #{userId}
+        	select r.* from role r
+				left join user_group_role_re re on re.role_id = r.id
+				left join user_group_re ug on ug.group_id = re.group_id
+				where ug.user_id = #{userId}
     </select>
     <!-- 根据操作id查询角色列表 -->
     <select id="queryRoleListByOpId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select r.* from role_permission_re rp
-        left join role r on r.id = rp.role_id
-        left join  permission per on per.id = rp.permission_id and per.type = 3
+        select r.* from role r
+				left join role_permission_re rp on r.id = rp.role_id
+				left join  permission per on per.id = rp.permission_id and per.type = 3
         left join  permission_operation_re pm on pm.permission_id = per.id
-        where pm.operation_id = #{operationId}
+				where pm.operation_id = #{operationId}
     </select>
 
 </mapper>
