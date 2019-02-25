@@ -11,7 +11,7 @@
  Target Server Version : 50724
  File Encoding         : 65001
 
- Date: 24/02/2019 22:15:47
+ Date: 25/02/2019 22:11:48
 */
 
 SET NAMES utf8mb4;
@@ -40,7 +40,7 @@ CREATE TABLE `menu`  (
   `pid` bigint(10) NULL DEFAULT NULL COMMENT '父id',
   `seq` int(6) NULL DEFAULT NULL COMMENT '序列号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -157,13 +157,18 @@ CREATE TABLE `role`  (
   `id` bigint(12) NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名',
   `code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '编码',
+  `creator` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES (1, '系统管理员', 'ADMIN');
+INSERT INTO `role` VALUES (1, '系统管理员', 'ADMIN', NULL, '2019-02-25 21:17:25');
+INSERT INTO `role` VALUES (2, 'test', 'test02', 'lpli', '2019-02-25 22:03:12');
+INSERT INTO `role` VALUES (3, '测试', 'test01', 'lpli', '2019-02-25 22:05:43');
+INSERT INTO `role` VALUES (4, '哈哈', 'haha01', 'lpli', '2019-02-25 22:08:32');
 
 -- ----------------------------
 -- Table structure for role_permission_re

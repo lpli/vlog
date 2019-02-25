@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
+import java.util.Date;
+
 /**
  * <p>
  *  前端控制器
@@ -23,20 +25,22 @@ import org.springframework.stereotype.Controller;
  */
 @RestController
 @RequestMapping("/role")
-public class RoleController {
+public class RoleController extends BaseController {
 
 
     @Autowired
     private RoleService roleService;
 
     @PostMapping("/create")
-    public JsonResponse create(Role role){
+    public JsonResponse create(@RequestBody Role role){
+        role.setCreator(this.getToken().getUsername());
+        role.setCreateTime(new Date());
         roleService.save(role);
         return JsonResponse.buildSuccess();
     }
 
     @PutMapping("/update")
-    public JsonResponse update(Role role){
+    public JsonResponse update(@RequestBody Role role){
         roleService.updateById(role);
         return JsonResponse.buildSuccess();
     }
@@ -53,7 +57,7 @@ public class RoleController {
         Page<Role> page = new Page<>();
         page.setSize(pageSize);
         page.setCurrent(pageNo);
-        IPage<Role> roleIPage = roleService.page(page, new QueryWrapper<Role>());
+        IPage<Role> roleIPage = roleService.page(page, new QueryWrapper<Role>().eq("creator",this.getToken().getUsername()));
         page.setRecords(roleIPage.getRecords());
         page.setTotal(roleIPage.getTotal());
         json.setCode(ResponseCode.SUCCESS.getCode());

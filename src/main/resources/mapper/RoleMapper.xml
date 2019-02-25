@@ -11,7 +11,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name,code
+        id, name,code,creator,create_time
     </sql>
 
     <!--查询用户-角色关联表下的role-->

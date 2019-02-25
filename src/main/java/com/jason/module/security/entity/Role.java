@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -35,6 +36,11 @@ public class Role extends Model<Role> {
     private String code;
 
 
+    private String creator;
+
+    private Date createTime;
+
+
     public Long getId() {
         return id;
     }
@@ -62,6 +68,23 @@ public class Role extends Model<Role> {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     @Override
