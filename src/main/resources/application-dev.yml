@@ -2,6 +2,7 @@ server:
   port: 9000
 app:
   default-password: 123456
+  admin-code: ADMIN
 spring:
   profiles: dev
   cache:

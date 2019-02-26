@@ -23,4 +23,14 @@ public class BaseController {
         return ids;
     }
 
+    protected  boolean isAdmin(String code){
+        List<UserAuthority>  list = (List<UserAuthority>) getToken().getAuthorities();
+        for(UserAuthority authority:list){
+            if(code.equals(authority.getAuthority())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

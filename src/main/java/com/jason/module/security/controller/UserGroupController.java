@@ -11,6 +11,7 @@ import com.jason.module.security.entity.UserGroupRoleRe;
 import com.jason.module.security.service.UserGroupReService;
 import com.jason.module.security.service.UserGroupRoleReService;
 import com.jason.module.security.service.UserGroupService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +71,22 @@ public class UserGroupController extends BaseController{
         json.setCode(ResponseCode.SUCCESS.getCode());
         json.setData(list);
         return json;
+    }
+
+    @GetMapping("/check")
+    public JsonResponse check(UserGroup userGroup){
+        QueryWrapper<UserGroup> queryWrapper =new QueryWrapper<>();
+        if(userGroup.getId()!=null){
+            queryWrapper = queryWrapper.ne("id",userGroup.getId());
+        }
+        if(StringUtils.isNotEmpty(userGroup.getName())){
+            queryWrapper.eq("name",userGroup.getName());
+        }
+        int count = userGroupService.count(queryWrapper);
+        if(count >0){
+            return JsonResponse.buildFail("名称已存在");
+        }
+        return JsonResponse.buildSuccess();
     }
 }
 
