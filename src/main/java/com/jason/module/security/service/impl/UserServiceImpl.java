@@ -1,6 +1,8 @@
 package com.jason.module.security.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.module.security.entity.User;
 import com.jason.module.security.dao.UserMapper;
 import com.jason.module.security.entity.UserGroup;
@@ -66,5 +68,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void enableUser(User user) {
         user.setEnable(true);
         baseMapper.update(user, new QueryWrapper<User>().eq("id", user.getId()));
+    }
+
+    @Override
+    public Page<User> selectUserByGroupId(IPage<User> page, Long groupId) {
+        return baseMapper.;
     }
 }

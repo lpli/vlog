@@ -1,5 +1,7 @@
 package com.jason.module.security.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.module.security.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jason.module.security.entity.UserGroup;
@@ -41,5 +43,8 @@ public interface UserService extends IService<User> {
      * @param user
      */
     void enableUser(User user);
+
+
+    Page<User> selectUserByGroupId(IPage<User> page,Long groupId);
 
 }

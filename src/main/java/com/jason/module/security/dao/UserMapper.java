@@ -1,7 +1,11 @@
 package com.jason.module.security.dao;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.jason.module.security.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserMapper extends BaseMapper<User> {
 
+    List<User> selectUserByGroupId(IPage<User> page,@Param("id") Long id);
 }

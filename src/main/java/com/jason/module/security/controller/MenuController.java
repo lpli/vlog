@@ -6,7 +6,9 @@ import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
 import com.jason.module.security.dto.MenuDto;
 import com.jason.module.security.entity.Menu;
+import com.jason.module.security.entity.Role;
 import com.jason.module.security.service.MenuService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -75,6 +77,32 @@ public class MenuController extends BaseController{
         }
         JsonResponse<List<MenuDto>> json = new JsonResponse<>(ResponseCode.SUCCESS,list);
         return json;
+    }
+
+
+    @GetMapping("/check")
+    public JsonResponse check(Menu menu) {
+        QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
+        if(menu.getId()!=null){
+            queryWrapper = queryWrapper.ne("id", menu.getId());
+        }
+        if (StringUtils.isNotEmpty(menu.getName())) {
+            int count = menuService.count(queryWrapper.eq("name", menu.getName()));
+            if (count > 0) {
+                return JsonResponse.buildFail("名称已存在");
+            }
+        }else if(menu.getSeq() !=null ){
+            int count = menuService.count(queryWrapper.eq("seq", menu.getSeq()));
+            if (count > 0) {
+                return JsonResponse.buildFail("编号已存在");
+            }
+        }else if(StringUtils.isNotEmpty(menu.getUrl())){
+            int count = menuService.count(queryWrapper.eq("url", menu.getUrl()));
+            if (count > 0) {
+                return JsonResponse.buildFail("URL已存在");
+            }
+        }
+        return JsonResponse.buildSuccess();
     }
 
 }
