@@ -32,7 +32,7 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends  BaseController{
 
     @Autowired
     private UserService userService;
@@ -53,14 +53,16 @@ public class UserController {
      * @return
      */
     @GetMapping("/pageList")
-    public JsonResponse<Page<User>> list(long pageSize,long pageNo){
+    public JsonResponse<Page<User>> list(long pageSize,long pageNo,UserDto userDto){
         JsonResponse<Page<User>> json = new JsonResponse<>();
         Page<User> page = new Page<>();
         page.setSize(pageSize);
         page.setCurrent(pageNo);
-        IPage<User> userIPage = userService.page(page, new QueryWrapper<User>().select(User.class,i->!i.getColumn().equals("password")));
-        page.setRecords(userIPage.getRecords());
-        page.setTotal(userIPage.getTotal());
+        if(userDto == null){
+            userDto = new UserDto();
+        }
+        userDto.setGroupId(this.getToken().getUserGroup().getId());
+        page = userService.selectUserByGroupId(page,userDto);
         json.setCode(ResponseCode.SUCCESS.getCode());
         json.setData(page);
         return json;

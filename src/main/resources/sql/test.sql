@@ -11,23 +11,11 @@
  Target Server Version : 50724
  File Encoding         : 65001
 
- Date: 25/02/2019 22:11:48
+ Date: 10/03/2019 20:16:34
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for element
--- ----------------------------
-DROP TABLE IF EXISTS `element`;
-CREATE TABLE `element`  (
-  `id` bigint(10) NOT NULL,
-  `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
-  `code` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '编码',
-  `html` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '页面元素表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for menu
@@ -40,19 +28,20 @@ CREATE TABLE `menu`  (
   `pid` bigint(10) NULL DEFAULT NULL COMMENT '父id',
   `seq` int(6) NULL DEFAULT NULL COMMENT '序列号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
-INSERT INTO `menu` VALUES (13, '系统管理', '', 0, 10);
+INSERT INTO `menu` VALUES (13, '权限设置', '', 0, 10);
 INSERT INTO `menu` VALUES (14, '用户管理', '/user', 13, 1001);
-INSERT INTO `menu` VALUES (15, '组管理', '/group', 13, 1002);
+INSERT INTO `menu` VALUES (15, '部门管理', '/group', 13, 1002);
 INSERT INTO `menu` VALUES (16, '角色管理', '/role', 13, 1003);
-INSERT INTO `menu` VALUES (17, '权限管理', '/permisson', 13, 1004);
-INSERT INTO `menu` VALUES (18, '资源管理', '/resource', 13, 10);
+INSERT INTO `menu` VALUES (17, '资源管理', '', 13, 1004);
 INSERT INTO `menu` VALUES (20, '演示', '', 0, 20);
 INSERT INTO `menu` VALUES (21, '编辑器', '/editor', 20, 2001);
+INSERT INTO `menu` VALUES (23, '菜单', '/menu', 17, 100401);
+INSERT INTO `menu` VALUES (24, '操作', '/operation', 17, 100402);
 
 -- ----------------------------
 -- Table structure for operation
@@ -75,7 +64,7 @@ CREATE TABLE `permission`  (
   `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '权限id',
   `type` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限类型（1:菜单；2:页面元素；3:操作）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of permission
@@ -97,19 +86,9 @@ INSERT INTO `permission` VALUES (14, '1');
 INSERT INTO `permission` VALUES (15, '1');
 INSERT INTO `permission` VALUES (16, '1');
 INSERT INTO `permission` VALUES (17, '1');
-
--- ----------------------------
--- Table structure for permission_element_re
--- ----------------------------
-DROP TABLE IF EXISTS `permission_element_re`;
-CREATE TABLE `permission_element_re`  (
-  `permission_id` bigint(10) NOT NULL,
-  `element_id` bigint(10) NOT NULL,
-  PRIMARY KEY (`permission_id`, `element_id`) USING BTREE,
-  INDEX `fk_pe_element_id`(`element_id`) USING BTREE,
-  CONSTRAINT `fk_pe_element_id` FOREIGN KEY (`element_id`) REFERENCES `element` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pe_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限-元素关联表' ROW_FORMAT = Dynamic;
+INSERT INTO `permission` VALUES (18, '1');
+INSERT INTO `permission` VALUES (19, '1');
+INSERT INTO `permission` VALUES (20, '1');
 
 -- ----------------------------
 -- Table structure for permission_menu_re
@@ -132,9 +111,10 @@ INSERT INTO `permission_menu_re` VALUES (8, 14);
 INSERT INTO `permission_menu_re` VALUES (9, 15);
 INSERT INTO `permission_menu_re` VALUES (10, 16);
 INSERT INTO `permission_menu_re` VALUES (11, 17);
-INSERT INTO `permission_menu_re` VALUES (12, 18);
 INSERT INTO `permission_menu_re` VALUES (14, 20);
 INSERT INTO `permission_menu_re` VALUES (15, 21);
+INSERT INTO `permission_menu_re` VALUES (19, 23);
+INSERT INTO `permission_menu_re` VALUES (20, 24);
 
 -- ----------------------------
 -- Table structure for permission_operation_re
@@ -205,7 +185,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 INSERT INTO `user` VALUES (1, 'lpli', '上世纪大精神的', 'e10adc3949ba59abbe56e057f20f883e', 'lll@xxx.com', '15871411351', 1, '2019-01-05 17:33:11', '2019-02-24 14:17:30');
 INSERT INTO `user` VALUES (3, 'abcdefgh', '是', 'e10adc3949ba59abbe56e057f20f883e', 'xx@qq.com', '15871411351', 1, '2019-02-24 14:56:00', '2019-02-24 15:30:15');
-INSERT INTO `user` VALUES (4, 'liuqiaoce', 'liuqiaoce', 'e10adc3949ba59abbe56e057f20f883e', 'cccc@qqq.com', '13588888888', 0, '2019-02-24 15:06:40', '2019-02-24 15:07:15');
+INSERT INTO `user` VALUES (4, 'liuqiaoce', 'liuqiaoce', 'e10adc3949ba59abbe56e057f20f883e', 'cccc@qqq.com', '13588888888', 1, '2019-02-24 15:06:40', '2019-02-24 15:07:15');
 INSERT INTO `user` VALUES (5, 'dfsdsfds', 'dfsddsfds', 'e10adc3949ba59abbe56e057f20f883e', 'xxs@qq.com', '13566666666', 1, '2019-02-24 15:07:59', NULL);
 INSERT INTO `user` VALUES (6, 'sxsdsadsadsa', 'dsadsadsada', 'e10adc3949ba59abbe56e057f20f883e', 'sdas@qqq.com', '15811111111', 1, '2019-02-24 15:08:20', NULL);
 INSERT INTO `user` VALUES (7, 'sdadsads', 'adsadsad', 'e10adc3949ba59abbe56e057f20f883e', 'sdads@qq.com', '13512121212', 1, '2019-02-24 15:08:39', NULL);
@@ -305,7 +285,7 @@ BEGIN
             SET sTemp = concat(sTemp,',',sTempChd); 
             SELECT group_concat(id) INTO sTempChd FROM user_group where FIND_IN_SET(pid,sTempChd)>0; 
         END WHILE; 
-        RETURN sTemp;
+        RETURN substring(sTemp,5);
 END
 ;;
 delimiter ;

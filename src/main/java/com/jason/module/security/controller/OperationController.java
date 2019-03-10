@@ -73,12 +73,14 @@ public class OperationController extends BaseController{
             if (count > 0) {
                 return JsonResponse.buildFail("名称已存在");
             }
-        }else if(StringUtils.isNotEmpty(operation.getCode()) ){
+        }
+        if(StringUtils.isNotEmpty(operation.getCode()) ){
             int count = operationService.count(queryWrapper.eq("code", operation.getCode()));
             if (count > 0) {
                 return JsonResponse.buildFail("编码已存在");
             }
-        }else if(StringUtils.isNotEmpty(operation.getUrl())){
+        }
+        if(StringUtils.isNotEmpty(operation.getUrl())){
             int count = operationService.count(queryWrapper.eq("url", operation.getUrl()));
             if (count > 0) {
                 return JsonResponse.buildFail("URL已存在");

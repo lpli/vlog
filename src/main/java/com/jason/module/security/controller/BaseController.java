@@ -2,6 +2,7 @@ package com.jason.module.security.controller;
 
 import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.entity.UserAuthority;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.List;
 
 public class BaseController {
 
+    @Value("${app.admin-code}")
+    private String adminCode;
 
     protected UserDto getToken(){
         return (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -23,10 +26,10 @@ public class BaseController {
         return ids;
     }
 
-    protected  boolean isAdmin(String code){
+    protected  boolean isAdmin(){
         List<UserAuthority>  list = (List<UserAuthority>) getToken().getAuthorities();
         for(UserAuthority authority:list){
-            if(code.equals(authority.getAuthority())){
+            if(adminCode.equals(authority.getAuthority())){
                 return true;
             }
         }

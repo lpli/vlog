@@ -52,8 +52,13 @@ public class AjaxUserPasswordFilter extends UsernamePasswordAuthenticationFilter
         if(HttpUtil.isAjaxRequest(request)&& !this.requiresAuthentication(request,response)){
             //ajax请求且不是登录
             String token = request.getHeader(TOKEN_HEADER);
+
+            if(StringUtils.isEmpty(token)){
+                unsuccessfulAuthentication(request, (HttpServletResponse) res, new BadCredentialsException("Token已失效"));
+                return;
+            }
             UserDto userDto = tokenUserDetailService.getToken(token);
-            if(StringUtils.isEmpty(token)|| userDto == null){
+            if(userDto == null){
                 unsuccessfulAuthentication(request, (HttpServletResponse) res, new BadCredentialsException("Token已失效"));
                 return;
             }

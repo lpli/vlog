@@ -3,6 +3,7 @@ package com.jason.module.security.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.entity.User;
 import com.jason.module.security.dao.UserMapper;
 import com.jason.module.security.entity.UserGroup;
@@ -13,6 +14,8 @@ import com.jason.module.security.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -71,7 +74,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Page<User> selectUserByGroupId(IPage<User> page, Long groupId) {
-        return baseMapper.;
+    public Page<User> selectUserByGroupId(IPage<User> page, UserDto query) {
+        Page<User> pageDto = new Page<>();
+        List<User> list =  baseMapper.selectUserByGroupId(page,query);
+        pageDto.setCurrent(page.getCurrent());
+        pageDto.setSize(page.getSize());
+        pageDto.setTotal(page.getTotal());
+        pageDto.setRecords(list);
+        return pageDto;
     }
 }

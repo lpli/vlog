@@ -12,8 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
-
 import java.util.Date;
 
 /**
@@ -77,7 +75,8 @@ public class RoleController extends BaseController {
             if (count > 0) {
                 return JsonResponse.buildFail("角色名已存在");
             }
-        }else if(StringUtils.isNotEmpty(role.getCode())){
+        }
+        if(StringUtils.isNotEmpty(role.getCode())){
             int count = roleService.count(queryWrapper.eq("code", role.getCode()));
             if (count > 0) {
                 return JsonResponse.buildFail("编码已存在");

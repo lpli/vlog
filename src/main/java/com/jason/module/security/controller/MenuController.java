@@ -6,16 +6,11 @@ import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
 import com.jason.module.security.dto.MenuDto;
 import com.jason.module.security.entity.Menu;
-import com.jason.module.security.entity.Role;
 import com.jason.module.security.service.MenuService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -29,9 +24,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/menu")
 public class MenuController extends BaseController{
-
-    @Value("${app.admin-code}")
-    private String adminCode;
 
     @Autowired
     private MenuService menuService;
@@ -54,7 +46,7 @@ public class MenuController extends BaseController{
     @PutMapping("/update")
     public JsonResponse put(@RequestBody Menu menu) {
         JsonResponse response = JsonResponse.buildFail();
-        if (menu.getId() != null) {
+        if (menu.getId() == null) {
             response.setMsg("id不能为空");
             return response;
         }
@@ -66,7 +58,7 @@ public class MenuController extends BaseController{
     @GetMapping("/list")
     public JsonResponse<List<MenuDto>> list(){
         List<MenuDto> list;
-        if(isAdmin(adminCode)){
+        if(isAdmin()){
             list = menuService.getMenu();
         }else{
             List<Long> roleIds = this.getRoleIds();
@@ -91,12 +83,14 @@ public class MenuController extends BaseController{
             if (count > 0) {
                 return JsonResponse.buildFail("名称已存在");
             }
-        }else if(menu.getSeq() !=null ){
+        }
+        if(menu.getSeq() !=null ){
             int count = menuService.count(queryWrapper.eq("seq", menu.getSeq()));
             if (count > 0) {
                 return JsonResponse.buildFail("编号已存在");
             }
-        }else if(StringUtils.isNotEmpty(menu.getUrl())){
+        }
+        if(StringUtils.isNotEmpty(menu.getUrl())){
             int count = menuService.count(queryWrapper.eq("url", menu.getUrl()));
             if (count > 0) {
                 return JsonResponse.buildFail("URL已存在");
