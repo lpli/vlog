@@ -17,11 +17,12 @@
         <result column="url" property="url" />
         <result column="pid" property="pid" />
         <result column="seq" property="seq" />
+        <result column="icon" property="icon" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, url, pid,seq
+        id, name, url, pid,seq,icon
     </sql>
 
     <select id="queryMenuListByRole" parameterType="java.util.List" resultMap="DtoResultMap">

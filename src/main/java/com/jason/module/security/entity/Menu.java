@@ -41,6 +41,9 @@ public class Menu extends Model<Menu> {
     private Integer seq;
 
 
+    private String icon;
+
+
     public Long getId() {
         return id;
     }
@@ -85,6 +88,15 @@ public class Menu extends Model<Menu> {
 
     public void setSeq(Integer seq) {
         this.seq = seq;
+    }
+
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     @Override
