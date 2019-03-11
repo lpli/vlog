@@ -57,6 +57,7 @@ public class TokenUserDetailService implements UserDetailsService {
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(user,userDto);
         userDto.setUserGroup(userGroup);
+        userDto.setGroupId(userGroup.getId());
         userDto.setUserAuthorityList(userAuthorities);
         return userDto;
     }

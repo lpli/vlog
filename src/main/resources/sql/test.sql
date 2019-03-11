@@ -275,17 +275,17 @@ DROP FUNCTION IF EXISTS `getChildLst`;
 delimiter ;;
 CREATE DEFINER=`vlog`@`%` FUNCTION `getChildLst`(rootId INT) RETURNS varchar(1000) CHARSET utf8
 BEGIN 
-        DECLARE sTemp VARCHAR(1000); 
-        DECLARE sTempChd VARCHAR(1000); 
- 
-        SET sTemp = '^'; 
-        SET sTempChd = rootId; 
- 
-        WHILE sTempChd is not null DO 
-            SET sTemp = concat(sTemp,',',sTempChd); 
-            SELECT group_concat(id) INTO sTempChd FROM user_group where FIND_IN_SET(pid,sTempChd)>0; 
-        END WHILE; 
-        RETURN substring(sTemp,5);
+    DECLARE sTemp VARCHAR(1000);
+		DECLARE sTempChd VARCHAR(1000);
+
+		SET sTemp = '^';
+		SET sTempChd = rootId;
+
+		WHILE sTempChd is not null DO
+				SET sTemp = concat(sTemp,',',sTempChd);
+				SELECT group_concat(id) INTO sTempChd FROM user_group where FIND_IN_SET(pid,sTempChd)>0;
+		END WHILE;
+		RETURN substring(sTemp,4+length(rootId));
 END
 ;;
 delimiter ;
