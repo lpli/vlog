@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan("com.jason.module.security.dao")
+@MapperScan("com.jason.module.*.dao")
 public class MybatisPlusConfig {
     
 

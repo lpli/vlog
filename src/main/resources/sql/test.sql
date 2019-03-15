@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80015
 File Encoding         : 65001
 
-Date: 2019-03-11 17:02:12
+Date: 2019-03-15 15:46:09
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,7 +27,7 @@ CREATE TABLE `menu` (
   `seq` int(6) DEFAULT NULL COMMENT '序列号',
   `icon` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '菜单图标',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='菜单表';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='菜单表';
 
 -- ----------------------------
 -- Records of menu
@@ -37,8 +37,8 @@ INSERT INTO `menu` VALUES ('14', '用户管理', '/user', '13', '1001', null);
 INSERT INTO `menu` VALUES ('15', '部门管理', '/group', '13', '1002', null);
 INSERT INTO `menu` VALUES ('16', '角色管理', '/role', '13', '1003', null);
 INSERT INTO `menu` VALUES ('17', '资源管理', '', '13', '1004', null);
-INSERT INTO `menu` VALUES ('20', '演示', '', '0', '20', null);
-INSERT INTO `menu` VALUES ('21', '编辑器', '/editor', '20', '2001', null);
+INSERT INTO `menu` VALUES ('20', '演示', '', '0', '20', 'el-icon-third-deploymentunit');
+INSERT INTO `menu` VALUES ('21', '编辑器', '/editor', '20', '2001', 'el-icon-edit');
 INSERT INTO `menu` VALUES ('23', '菜单', '/menu', '17', '100401', null);
 INSERT INTO `menu` VALUES ('24', '操作', '/operation', '17', '100402', null);
 
@@ -67,7 +67,7 @@ CREATE TABLE `permission` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '权限id',
   `type` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '权限类型（1:菜单；2:页面元素；3:操作）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of permission
@@ -92,6 +92,15 @@ INSERT INTO `permission` VALUES ('17', '1');
 INSERT INTO `permission` VALUES ('18', '1');
 INSERT INTO `permission` VALUES ('19', '1');
 INSERT INTO `permission` VALUES ('20', '1');
+INSERT INTO `permission` VALUES ('21', '1');
+INSERT INTO `permission` VALUES ('22', '1');
+INSERT INTO `permission` VALUES ('23', '1');
+INSERT INTO `permission` VALUES ('24', '1');
+INSERT INTO `permission` VALUES ('25', '1');
+INSERT INTO `permission` VALUES ('26', '1');
+INSERT INTO `permission` VALUES ('27', '1');
+INSERT INTO `permission` VALUES ('28', '1');
+INSERT INTO `permission` VALUES ('29', '1');
 
 -- ----------------------------
 -- Table structure for permission_menu_re
@@ -134,6 +143,23 @@ CREATE TABLE `permission_operation_re` (
 
 -- ----------------------------
 -- Records of permission_operation_re
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for resource_image
+-- ----------------------------
+DROP TABLE IF EXISTS `resource_image`;
+CREATE TABLE `resource_image` (
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '图片id',
+  `name` varchar(255) DEFAULT NULL COMMENT '文件名',
+  `path` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '图片路径',
+  `size` bigint(9) DEFAULT NULL COMMENT '大小(字节数)',
+  `upload_time` timestamp NULL DEFAULT NULL COMMENT '上传时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of resource_image
 -- ----------------------------
 
 -- ----------------------------

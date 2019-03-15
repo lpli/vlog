@@ -3,6 +3,9 @@ server:
 app:
   default-password: 123456
   admin-code: ADMIN
+  img-path: D:/upload/
+  img-type: jpg,png,bmp,gif
+  img-server: http://localhost:9000/img/
 spring:
   profiles: dev
   cache:
