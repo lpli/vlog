@@ -46,6 +46,7 @@ public interface UserService extends IService<User> {
     void enableUser(User user);
 
 
-    Page<User> selectUserByGroupId(IPage<User> page, UserDto query);
+    Page<User> selectSubUserByGroupId(IPage<User> page, UserDto query);
+    Page<User> selectAllUserByGroupId(IPage<User> page, UserDto query);
 
 }

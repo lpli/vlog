@@ -54,12 +54,12 @@ public class AjaxUserPasswordFilter extends UsernamePasswordAuthenticationFilter
             String token = request.getHeader(TOKEN_HEADER);
 
             if(StringUtils.isEmpty(token)){
-                unsuccessfulAuthentication(request, (HttpServletResponse) res, new BadCredentialsException("Token已失效"));
+                unsuccessfulAuthentication(request, (HttpServletResponse) res, new BadCredentialsException("无效会话"));
                 return;
             }
             UserDto userDto = tokenUserDetailService.getToken(token);
             if(userDto == null){
-                unsuccessfulAuthentication(request, (HttpServletResponse) res, new BadCredentialsException("Token已失效"));
+                unsuccessfulAuthentication(request, (HttpServletResponse) res, new BadCredentialsException("会话已过期"));
                 return;
             }
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userDto, userDto.getPassword());

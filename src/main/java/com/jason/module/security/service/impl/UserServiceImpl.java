@@ -74,9 +74,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Page<User> selectUserByGroupId(IPage<User> page, UserDto query) {
+    public Page<User> selectSubUserByGroupId(IPage<User> page, UserDto query) {
         Page<User> pageDto = new Page<>();
-        List<User> list =  baseMapper.selectUserByGroupId(page,query);
+        List<User> list =  baseMapper.selectSubUserByGroupId(page,query);
+        pageDto.setCurrent(page.getCurrent());
+        pageDto.setSize(page.getSize());
+        pageDto.setTotal(page.getTotal());
+        pageDto.setRecords(list);
+        return pageDto;
+    }
+
+    @Override
+    public Page<User> selectAllUserByGroupId(IPage<User> page, UserDto query) {
+        Page<User> pageDto = new Page<>();
+        List<User> list =  baseMapper.selectAllUserByGroupId(page,query);
         pageDto.setCurrent(page.getCurrent());
         pageDto.setSize(page.getSize());
         pageDto.setTotal(page.getTotal());

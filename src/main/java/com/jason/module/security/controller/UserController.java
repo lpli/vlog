@@ -58,11 +58,13 @@ public class UserController extends  BaseController{
         Page<User> page = new Page<>();
         page.setSize(pageSize);
         page.setCurrent(pageNo);
-        if(userDto == null){
-            userDto = new UserDto();
+        if(userDto.getGroupId() == null){
+            userDto.setGroupId(this.getToken().getGroupId());
+            page = userService.selectSubUserByGroupId(page,userDto);
+        }else{
+            page = userService.selectAllUserByGroupId(page,userDto);
         }
-        userDto.setGroupId(this.getToken().getUserGroup().getId());
-        page = userService.selectUserByGroupId(page,userDto);
+
         json.setCode(ResponseCode.SUCCESS.getCode());
         json.setData(page);
         return json;
