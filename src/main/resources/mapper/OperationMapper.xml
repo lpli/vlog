@@ -11,29 +11,39 @@
         <result column="pid" property="pid" />
     </resultMap>
 
+    <resultMap id="DtoResultMap" type="com.jason.module.security.dto.OperationDto" extends="BaseResultMap">
+        <result column="permissionId" property="permissionId"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, name, url, code, pid
     </sql>
 
-    <select id="queryOperationListByRole" parameterType="java.util.List">
-        select m.* from role_permission_re rp
-        left join  permission per on per.id = rp.permission_id and per.type = 3
-        left join  permission_operation_re pm on pm.permission_id = per.id
-        left join operation m on m.id = pm.operation_id
+    <select id="queryOperationListByRole" parameterType="java.util.List" resultMap="DtoResultMap">
+        select m.*,per.id as permissionId from
+        operation m
+        left join permission_operation_re po on po.operation_id = m.id
+        left join permission per on per.id = po.permission_id
+        left join role_permission_re rp on rp.permission_id = per.id
         where rp.role_id in
         <foreach collection="roleIdList" open="(" close=")" item="item" separator=",">
             #{item}
         </foreach>
     </select>
 
-    <select id="queryOperationListByRoleId" parameterType="java.lang.Long">
-        select m.* from role_permission_re rp
-        left join  permission per on per.id = rp.permission_id and per.type = 3
-        left join  permission_operation_re pm on pm.permission_id = per.id
-        left join operation m on m.id = pm.operation_id
-        where rp.role_id = #{roleId}
+    <select id="queryOperationListByRoleId" parameterType="java.lang.Long" resultMap="DtoResultMap">
+         select m.*,per.id as permissionId from
+        operation m
+        left join permission_operation_re po on po.operation_id = m.id
+        left join permission per on per.id = po.permission_id
+        left join role_permission_re rp on rp.permission_id = per.id
+        where rp.role_id  = #{roleId}
     </select>
 
-
+    <select id="queryAll" resultMap="DtoResultMap">
+        select o.*,po.permission_id as permissionId
+        from operation o
+        left join permission_operation_re po on po.operation_id = o.id
+    </select>
 </mapper>

@@ -6,12 +6,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.security.dto.OperationDto;
 import com.jason.module.security.entity.Menu;
 import com.jason.module.security.entity.Operation;
 import com.jason.module.security.service.OperationService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -30,7 +34,7 @@ public class OperationController extends BaseController{
 
     @PostMapping("/create")
     public JsonResponse create(@RequestBody Operation operation){
-        operationService.save(operation);
+        operationService.saveOperation(operation);
         return JsonResponse.buildSuccess();
     }
 
@@ -44,6 +48,17 @@ public class OperationController extends BaseController{
     public JsonResponse update(@RequestBody Operation operation){
         operationService.updateById(operation);
         return JsonResponse.buildSuccess();
+    }
+
+    @GetMapping("/{roleId}/list")
+    public JsonResponse<Map<String,Object>> getOpsByRoleId(@PathVariable("roleId")Long roleId){
+        Map<String,Object> map;
+        if(isAdmin()){
+            map = operationService.getUserOperationList(roleId);
+        }else{
+            map = operationService.getUserOperationList(roleId,this.getUserRoleIds());
+        }
+        return new JsonResponse<>(ResponseCode.SUCCESS,map);
     }
 
     @GetMapping("/pageList")

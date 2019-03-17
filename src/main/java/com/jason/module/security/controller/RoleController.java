@@ -6,13 +6,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.security.dto.RoleAuthorizationDto;
 import com.jason.module.security.entity.Role;
 import com.jason.module.security.service.RoleService;
+import com.jason.module.security.wrapper.ContentCacheRequestWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -82,6 +88,18 @@ public class RoleController extends BaseController {
                 return JsonResponse.buildFail("编码已存在");
             }
         }
+        return JsonResponse.buildSuccess();
+    }
+
+    @PostMapping("/authorization")
+    public JsonResponse authorization(@RequestBody  RoleAuthorizationDto dto){
+        if(dto.getPermissionIds() == null || dto.getPermissionIds().isEmpty()){
+            return JsonResponse.buildFail("权限不能为空");
+        }
+        if(dto.getRoleId() == null){
+            return JsonResponse.buildFail("角色不能为空");
+        }
+        roleService.authorization(dto.getPermissionIds(),dto.getRoleId());
         return JsonResponse.buildSuccess();
     }
 }

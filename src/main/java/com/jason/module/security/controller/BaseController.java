@@ -17,7 +17,7 @@ public class BaseController {
         return (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    protected List<Long> getRoleIds(){
+    protected List<Long> getUserRoleIds(){
         List<Long> ids = new ArrayList<>();
         List<UserAuthority>  list = (List<UserAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         for(UserAuthority authority:list){

@@ -1,5 +1,6 @@
 package com.jason.module.security.service;
 
+import com.jason.module.security.dto.OperationDto;
 import com.jason.module.security.entity.Operation;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jason.module.security.entity.Role;
@@ -18,10 +19,15 @@ import java.util.Map;
  */
 public interface OperationService extends IService<Operation> {
 
-    List<Operation> getOperationList(List<Long> roleIdList);
-    List<Operation> getOperationList(Long roleId);
+    void saveOperation(Operation operation);
 
-    Map<String, List<Operation>> getRoleOperationMap();
+    List<OperationDto> getOperationList(List<Long> roleIdList);
+    List<OperationDto> getOperationList(Long roleId);
+
+    Map<String, List<OperationDto>> getRoleOperationMap();
 
     Map<String,List<Role>> getOperationRoleMap();
+
+    Map<String,Object> getUserOperationList(Long roleId,List<Long> roleIdList);
+    Map<String,Object> getUserOperationList(Long roleId);
 }

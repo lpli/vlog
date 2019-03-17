@@ -2,6 +2,7 @@ package com.jason.module.security.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.module.security.dto.MenuDto;
+import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.entity.Menu;
 import com.jason.module.security.dao.MenuMapper;
 import com.jason.module.security.entity.Permission;
@@ -15,10 +16,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -72,6 +70,27 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
+    public Map<String,Object> getMenuTree(Long roleId,List<Long> userRoleIds) {
+        //当前用户的菜单权限
+        List<MenuDto> list = baseMapper.queryMenuListByRole(userRoleIds);
+        List<MenuDto> userMenus = baseMapper.queryMenuListByRole(Arrays.asList(roleId));
+        Map<String,Object> map = new HashMap<>();
+        map.put("allMenu",getTree(list));
+        map.put("checkedMenu",userMenus);
+        return map;
+    }
+
+    @Override
+    public Map<String,Object> getMenuTree(Long roleId) {
+        List<MenuDto> userMenus = baseMapper.queryMenuListByRole(Arrays.asList(roleId));
+        List<MenuDto> list = baseMapper.queryAllMenu();
+        Map<String,Object> map = new HashMap<>();
+        map.put("allMenu",getTree(list));
+        map.put("checkedMenu",userMenus);
+        return map;
+    }
+
+    @Override
     public List<MenuDto> getMenu() {
         List<MenuDto> orgList = baseMapper.queryAllMenu();
         return getTree(orgList);
@@ -95,10 +114,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                 }
             }
             if (dto.getChildren() != null && !dto.getChildren().isEmpty()) {
+                dto.setChecked(isAllChecked(dto.getChildren()));
                 Collections.sort(dto.getChildren());
             }
         }
         Collections.sort(rootList);
         return rootList;
+    }
+
+    private boolean isAllChecked(List<MenuDto> list){
+        for(MenuDto dto:list){
+            if(!dto.isChecked()){
+                return false;
+            }
+        }
+        return true;
     }
 }

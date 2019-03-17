@@ -1,7 +1,9 @@
 package com.jason.module.security.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.jason.module.security.dto.OperationDto;
 import com.jason.module.security.entity.Operation;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ import java.util.List;
  * @since 2019-01-05
  */
 public interface OperationMapper extends BaseMapper<Operation> {
-    List<Operation> queryOperationListByRole(List<Long> roleIdList);
-    List<Operation> queryOperationListByRoleId(Long roleId);
+    List<OperationDto> queryOperationListByRole(@Param("roleIdList") List<Long> roleIdList);
+    List<OperationDto> queryOperationListByRoleId(@Param("roleId") Long roleId);
+    List<OperationDto> queryAll();
 }

@@ -6,6 +6,10 @@ import java.util.List;
 
 public class MenuDto extends Menu implements Comparable<MenuDto> {
 
+    private boolean checked;
+
+    private Long permissionId;
+
     public MenuDto() {
 
     }
@@ -16,6 +20,22 @@ public class MenuDto extends Menu implements Comparable<MenuDto> {
         this.setPid(menu.getPid());
         this.setSeq(menu.getSeq());
         this.setUrl(menu.getUrl());
+    }
+
+    public Long getPermissionId() {
+        return permissionId;
+    }
+
+    public void setPermissionId(Long permissionId) {
+        this.permissionId = permissionId;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     private List<MenuDto> children;

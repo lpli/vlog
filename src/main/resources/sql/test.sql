@@ -11,7 +11,7 @@
  Target Server Version : 50724
  File Encoding         : 65001
 
- Date: 16/03/2019 21:13:38
+ Date: 17/03/2019 21:39:11
 */
 
 SET NAMES utf8mb4;
@@ -55,7 +55,13 @@ CREATE TABLE `operation`  (
   `code` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '编码',
   `pid` bigint(20) NULL DEFAULT NULL COMMENT '父id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of operation
+-- ----------------------------
+INSERT INTO `operation` VALUES (6, '新增用户', '/user/create', '100001', NULL);
+INSERT INTO `operation` VALUES (7, '修改用户', '/user/update', '100002', NULL);
 
 -- ----------------------------
 -- Table structure for permission
@@ -65,7 +71,7 @@ CREATE TABLE `permission`  (
   `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '权限id',
   `type` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限类型（1:菜单；2:页面元素；3:操作）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of permission
@@ -107,6 +113,8 @@ INSERT INTO `permission` VALUES (34, '1');
 INSERT INTO `permission` VALUES (35, '1');
 INSERT INTO `permission` VALUES (36, '1');
 INSERT INTO `permission` VALUES (37, '1');
+INSERT INTO `permission` VALUES (38, '3');
+INSERT INTO `permission` VALUES (39, '3');
 
 -- ----------------------------
 -- Table structure for permission_menu_re
@@ -146,6 +154,12 @@ CREATE TABLE `permission_operation_re`  (
   CONSTRAINT `fk_po_operation_id` FOREIGN KEY (`operation_id`) REFERENCES `operation` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `fk_po_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限-操作关联表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of permission_operation_re
+-- ----------------------------
+INSERT INTO `permission_operation_re` VALUES (38, 6);
+INSERT INTO `permission_operation_re` VALUES (39, 7);
 
 -- ----------------------------
 -- Table structure for resource_image
@@ -193,15 +207,13 @@ CREATE TABLE `role`  (
   `creator` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
 INSERT INTO `role` VALUES (1, '系统管理员', 'ADMIN', NULL, '2019-02-25 21:17:25');
-INSERT INTO `role` VALUES (2, 'test', 'test02', 'lpli', '2019-02-25 22:03:12');
-INSERT INTO `role` VALUES (3, '测试', 'test01', 'lpli', '2019-02-25 22:05:43');
-INSERT INTO `role` VALUES (4, '哈哈', 'haha01', 'lpli', '2019-02-25 22:08:32');
+INSERT INTO `role` VALUES (5, '普通人员', 'ROLE_NORMAL', 'lpli', '2019-03-17 14:47:56');
 
 -- ----------------------------
 -- Table structure for role_permission_re
@@ -209,12 +221,21 @@ INSERT INTO `role` VALUES (4, '哈哈', 'haha01', 'lpli', '2019-02-25 22:08:32')
 DROP TABLE IF EXISTS `role_permission_re`;
 CREATE TABLE `role_permission_re`  (
   `role_id` bigint(12) NOT NULL COMMENT '角色id',
-  `permission_id` bigint(10) NULL DEFAULT NULL COMMENT '权限id',
-  PRIMARY KEY (`role_id`) USING BTREE,
+  `permission_id` bigint(10) NOT NULL COMMENT '权限id',
+  PRIMARY KEY (`role_id`, `permission_id`) USING BTREE,
   INDEX `fk_rp_permission_id`(`permission_id`) USING BTREE,
   CONSTRAINT `fk_rp_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `fk_rp_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色-权限关联表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of role_permission_re
+-- ----------------------------
+INSERT INTO `role_permission_re` VALUES (5, 7);
+INSERT INTO `role_permission_re` VALUES (5, 8);
+INSERT INTO `role_permission_re` VALUES (5, 9);
+INSERT INTO `role_permission_re` VALUES (5, 38);
+INSERT INTO `role_permission_re` VALUES (5, 39);
 
 -- ----------------------------
 -- Table structure for user

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -23,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/menu")
-public class MenuController extends BaseController{
+public class MenuController extends BaseController {
 
     @Autowired
     private MenuService menuService;
@@ -56,26 +57,36 @@ public class MenuController extends BaseController{
 
 
     @GetMapping("/list")
-    public JsonResponse<List<MenuDto>> list(){
+    public JsonResponse<List<MenuDto>> list() {
         List<MenuDto> list;
-        if(isAdmin()){
+        if (isAdmin()) {
             list = menuService.getMenu();
-        }else{
-            List<Long> roleIds = this.getRoleIds();
-            if(roleIds.isEmpty()){
-                return new JsonResponse<>(ResponseCode.SUCCESS,null);
+        } else {
+            List<Long> roleIds = this.getUserRoleIds();
+            if (roleIds.isEmpty()) {
+                return new JsonResponse<>(ResponseCode.SUCCESS, null);
             }
             list = menuService.getMenuList(roleIds);
         }
-        JsonResponse<List<MenuDto>> json = new JsonResponse<>(ResponseCode.SUCCESS,list);
+        JsonResponse<List<MenuDto>> json = new JsonResponse<>(ResponseCode.SUCCESS, list);
         return json;
     }
 
+    @GetMapping("/{roleId}/tree")
+    public JsonResponse<Map<String, Object>> listByRoleId(@PathVariable("roleId") Long roleId) {
+        Map<String, Object> map;
+        if (isAdmin()) {
+            map = menuService.getMenuTree(roleId);
+        } else {
+            map = menuService.getMenuTree(roleId, this.getUserRoleIds());
+        }
+        return new JsonResponse<>(ResponseCode.SUCCESS, map);
+    }
 
     @GetMapping("/check")
     public JsonResponse check(Menu menu) {
         QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
-        if(menu.getId()!=null){
+        if (menu.getId() != null) {
             queryWrapper = queryWrapper.ne("id", menu.getId());
         }
         if (StringUtils.isNotEmpty(menu.getName())) {
@@ -84,13 +95,13 @@ public class MenuController extends BaseController{
                 return JsonResponse.buildFail("名称已存在");
             }
         }
-        if(menu.getSeq() !=null ){
+        if (menu.getSeq() != null) {
             int count = menuService.count(queryWrapper.eq("seq", menu.getSeq()));
             if (count > 0) {
                 return JsonResponse.buildFail("编号已存在");
             }
         }
-        if(StringUtils.isNotEmpty(menu.getUrl())){
+        if (StringUtils.isNotEmpty(menu.getUrl())) {
             int count = menuService.count(queryWrapper.eq("url", menu.getUrl()));
             if (count > 0) {
                 return JsonResponse.buildFail("URL已存在");

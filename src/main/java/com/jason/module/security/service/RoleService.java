@@ -19,4 +19,10 @@ public interface RoleService extends IService<Role> {
 
     List<Role> getRoleListByOpId(Long operationId);
 
+    /**
+     * 给角色授权
+     * @param permissionIds 权限id
+     * @param roleId 角色id
+     */
+    void authorization(List<Long> permissionIds,Long roleId);
 }
