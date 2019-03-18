@@ -95,16 +95,17 @@ public class MenuController extends BaseController {
                 return JsonResponse.buildFail("名称已存在");
             }
         }
-        if (menu.getSeq() != null) {
-            int count = menuService.count(queryWrapper.eq("seq", menu.getSeq()));
-            if (count > 0) {
-                return JsonResponse.buildFail("序列号已存在");
-            }
-        }
+
         if (menu.getCode() != null) {
             int count = menuService.count(queryWrapper.eq("code", menu.getCode()));
             if (count > 0) {
                 return JsonResponse.buildFail("编号已存在");
+            }
+            if (menu.getSeq() != null) {
+                count = menuService.count(queryWrapper.eq("seq", menu.getSeq()));
+                if (count > 0) {
+                    return JsonResponse.buildFail("序列号已存在");
+                }
             }
         }
         if (StringUtils.isNotEmpty(menu.getUrl())) {

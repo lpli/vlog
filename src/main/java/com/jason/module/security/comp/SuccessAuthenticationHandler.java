@@ -47,10 +47,11 @@ public class SuccessAuthenticationHandler implements AuthenticationSuccessHandle
             String token = TokenUtil.getRandomToken();
             UserDto userDto = (UserDto) authentication.getPrincipal();
             this.userService.saveToken(token, userDto);
+            userDto.setToken(token);
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
             httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8.toString());
-            JsonResponse<String> json = new JsonResponse<>(ResponseCode.SUCCESS.getCode(), "登录成功");
-            json.setData(token);
+            JsonResponse<UserDto> json = new JsonResponse<>(ResponseCode.SUCCESS.getCode(), "登录成功");
+            json.setData(userDto);
             httpServletResponse.getWriter().write(JSONObject.toJSONString(json));
         } else {
             httpServletResponse.sendRedirect("/index");

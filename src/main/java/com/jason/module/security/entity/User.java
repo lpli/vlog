@@ -135,10 +135,6 @@ public class User extends Model<User> {
         this.updateTime = updateTime;
     }
 
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
 
     @Override
     public String toString() {

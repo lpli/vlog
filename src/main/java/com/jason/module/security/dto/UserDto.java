@@ -15,6 +15,9 @@ public class UserDto extends User implements UserDetails {
 
     private Long groupId;
 
+    private String token;
+
+
 
     public void setUserAuthorityList(List<UserAuthority> userAuthorityList) {
         this.userAuthorityList = userAuthorityList;
@@ -26,6 +29,15 @@ public class UserDto extends User implements UserDetails {
 
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
+    }
+
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override

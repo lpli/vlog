@@ -11,7 +11,7 @@
  Target Server Version : 50724
  File Encoding         : 65001
 
- Date: 17/03/2019 21:39:11
+ Date: 18/03/2019 23:11:29
 */
 
 SET NAMES utf8mb4;
@@ -26,6 +26,7 @@ CREATE TABLE `menu`  (
   `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单名称',
   `url` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单url',
   `pid` bigint(10) NULL DEFAULT NULL COMMENT '父id',
+  `code` int(6) NULL DEFAULT NULL COMMENT '编号',
   `seq` int(6) NULL DEFAULT NULL COMMENT '序列号',
   `icon` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单图标',
   PRIMARY KEY (`id`) USING BTREE
@@ -34,15 +35,15 @@ CREATE TABLE `menu`  (
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
-INSERT INTO `menu` VALUES (13, '权限设置', '', 0, 10, 'el-icon-info');
-INSERT INTO `menu` VALUES (14, '用户管理', '/user', 13, 1001, 'el-icon-third-user');
-INSERT INTO `menu` VALUES (15, '部门管理', '/group', 13, 1002, 'el-icon-third-apartment');
-INSERT INTO `menu` VALUES (16, '角色管理', '/role', 13, 1003, 'el-icon-third-team');
-INSERT INTO `menu` VALUES (17, '资源管理', '', 13, 1004, 'el-icon-third-appstore');
-INSERT INTO `menu` VALUES (20, '演示', '', 0, 20, 'el-icon-third-deploymentunit');
-INSERT INTO `menu` VALUES (21, '编辑器', '/editor', 20, 2001, 'el-icon-edit');
-INSERT INTO `menu` VALUES (23, '菜单', '/menu', 17, 100401, 'el-icon-third-menu');
-INSERT INTO `menu` VALUES (24, '操作', '/operation', 17, 100402, 'el-icon-third-wrench-fill');
+INSERT INTO `menu` VALUES (13, '权限设置', '', 0, 10, 1, 'el-icon-info');
+INSERT INTO `menu` VALUES (14, '用户管理', '/user', 13, 1001, 1, 'el-icon-third-user');
+INSERT INTO `menu` VALUES (15, '部门管理', '/group', 13, 1002, 3, 'el-icon-third-apartment');
+INSERT INTO `menu` VALUES (16, '角色管理', '/role', 13, 1003, 2, 'el-icon-third-team');
+INSERT INTO `menu` VALUES (17, '资源管理', '', 13, 1004, 4, 'el-icon-third-appstore');
+INSERT INTO `menu` VALUES (20, '演示', '', 0, 20, 1, 'el-icon-third-deploymentunit');
+INSERT INTO `menu` VALUES (21, '编辑器', '/editor', 20, 2001, 1, 'el-icon-edit');
+INSERT INTO `menu` VALUES (23, '菜单', '/menu', 17, 100401, 1, 'el-icon-third-menu');
+INSERT INTO `menu` VALUES (24, '操作', '/operation', 17, 100402, 2, 'el-icon-third-wrench-fill');
 
 -- ----------------------------
 -- Table structure for operation
@@ -257,17 +258,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'lpli', '上世纪大精神的', 'e10adc3949ba59abbe56e057f20f883e', 'lll@xxx.com', '15871411351', 1, '2019-01-05 17:33:11', '2019-02-24 14:17:30');
-INSERT INTO `user` VALUES (3, 'abcdefgh', '是', 'e10adc3949ba59abbe56e057f20f883e', 'xx@qq.com', '15871411351', 1, '2019-02-24 14:56:00', '2019-02-24 15:30:15');
-INSERT INTO `user` VALUES (4, 'liuqiaoce', 'liuqiaoce', 'e10adc3949ba59abbe56e057f20f883e', 'cccc@qqq.com', '13588888888', 1, '2019-02-24 15:06:40', '2019-02-24 15:07:15');
-INSERT INTO `user` VALUES (5, 'dfsdsfds', 'dfsddsfds', 'e10adc3949ba59abbe56e057f20f883e', 'xxs@qq.com', '13566666666', 1, '2019-02-24 15:07:59', NULL);
-INSERT INTO `user` VALUES (6, 'sxsdsadsadsa', 'dsadsadsada', 'e10adc3949ba59abbe56e057f20f883e', 'sdas@qqq.com', '15811111111', 1, '2019-02-24 15:08:20', NULL);
-INSERT INTO `user` VALUES (7, 'sdadsads', 'adsadsad', 'e10adc3949ba59abbe56e057f20f883e', 'sdads@qq.com', '13512121212', 1, '2019-02-24 15:08:39', NULL);
-INSERT INTO `user` VALUES (8, 'dsjhadjksahk', 'sd7uydsadsahdsa', 'e10adc3949ba59abbe56e057f20f883e', 'sda@11.com', '13512121212', 1, '2019-02-24 15:09:01', NULL);
-INSERT INTO `user` VALUES (9, 'sdadsadssdadsa', 'adsadsadsadsad', 'e10adc3949ba59abbe56e057f20f883e', 'dsadsa@qq.com', '13812121212', 1, '2019-02-24 15:09:21', NULL);
-INSERT INTO `user` VALUES (10, '2132wqewqewq', 'sdahdjsahk', 'e10adc3949ba59abbe56e057f20f883e', 'sdad@qq.com', '13812121212', 1, '2019-02-24 15:09:47', NULL);
-INSERT INTO `user` VALUES (11, 'sdadsa231', 'dsadsa12', 'e10adc3949ba59abbe56e057f20f883e', 'sda@1212.com', '13512121212', 1, '2019-02-24 15:10:04', NULL);
-INSERT INTO `user` VALUES (12, 'sdadsadasdsa12121', 'dsadsadsa', 'e10adc3949ba59abbe56e057f20f883e', 'wda@qwq.com', '13512121212', 1, '2019-02-24 15:12:13', NULL);
+INSERT INTO `user` VALUES (1, 'admin', '上世纪大精神的', 'e10adc3949ba59abbe56e057f20f883e', 'lll@xxx.com', '15871411351', 1, '2019-01-05 17:33:11', '2019-02-24 14:17:30');
 
 -- ----------------------------
 -- Table structure for user_group
