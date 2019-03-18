@@ -40,6 +40,8 @@ public class Menu extends Model<Menu> {
      */
     private Integer seq;
 
+    private Integer code;
+
 
     private String icon;
 
@@ -91,6 +93,14 @@ public class Menu extends Model<Menu> {
     }
 
 
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
     public String getIcon() {
         return icon;
     }
@@ -101,11 +111,15 @@ public class Menu extends Model<Menu> {
 
     @Override
     public String toString() {
-        return "Menu{" +
-        "id=" + id +
-        ", name=" + name +
-        ", url=" + url +
-        ", pid=" + pid +
-        "}";
+        final StringBuffer sb = new StringBuffer("Menu{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", url='").append(url).append('\'');
+        sb.append(", pid=").append(pid);
+        sb.append(", seq=").append(seq);
+        sb.append(", code=").append(code);
+        sb.append(", icon='").append(icon).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -20,6 +20,8 @@ public class MenuDto extends Menu implements Comparable<MenuDto> {
         this.setPid(menu.getPid());
         this.setSeq(menu.getSeq());
         this.setUrl(menu.getUrl());
+        this.setIcon(menu.getIcon());
+        this.setCode(menu.getCode());
     }
 
     public Long getPermissionId() {

@@ -10,6 +10,7 @@
         <result column="pid" property="pid" />
         <result column="seq" property="seq" />
         <result column="icon" property="icon" />
+        <result column="code" property="code" />
     </resultMap>
 
     <resultMap id="DtoResultMap" type="com.jason.module.security.dto.MenuDto" extends="BaseResultMap">
@@ -18,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, url, pid,seq,icon
+        id, name, url, pid,code,seq,icon
     </sql>
 
     <select id="queryMenuListByRole" parameterType="java.util.List" resultMap="DtoResultMap">
