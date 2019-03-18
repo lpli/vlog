@@ -21,16 +21,23 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 加载资源权限
  */
-@Component
 public class CustSecurityMetadataSource implements FilterInvocationSecurityMetadataSource, InitializingBean {
 
 
-    @Autowired
     private OperationService operationService;
+
 
 
     private Map<String, Collection<ConfigAttribute>> resourceMap = null;
 
+
+    public OperationService getOperationService() {
+        return operationService;
+    }
+
+    public void setOperationService(OperationService operationService) {
+        this.operationService = operationService;
+    }
 
     /**
      * 加载所有资源的角色列表

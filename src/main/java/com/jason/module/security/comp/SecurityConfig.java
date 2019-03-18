@@ -2,13 +2,13 @@ package com.jason.module.security.comp;
 
 import com.jason.module.security.filter.AjaxUserPasswordFilter;
 import com.jason.module.security.filter.ContentFilter;
+import com.jason.module.security.service.OperationService;
 import com.jason.module.security.service.impl.TokenUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.SecurityMetadataSource;
-import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,14 +16,14 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.DigestUtils;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -33,11 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private TokenUserDetailService tokenUserDetailService;
 
+    @Autowired
+    private OperationService operationService;
+
 
     @Autowired
     private MessageSource messageSource;
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+
 
 
     /**
@@ -87,12 +89,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll().anyRequest().authenticated().and().formLogin().loginPage("/login")
                 .successHandler(authenticationSuccessHandler()).failureHandler(authenticationFailureHandler()).and().logout().logoutUrl("/logout")
                 .logoutSuccessHandler(new LogoutHandler(tokenUserDetailService))
-                .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler).and().csrf().disable();
+                .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()).accessDeniedHandler(accessDeniedHandler()).and().csrf().disable();
         http.addFilterAt(myUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new ContentFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(filterSecurityInterceptor(),FilterSecurityInterceptor.class);
     }
 
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new CustAccessDeniedHandler();
+    }
 
+    public AuthenticationEntryPoint authenticationEntryPoint(){
+        return new CustAuthenticationEntryPoint();
+    }
+
+    @Bean
     public UsernamePasswordAuthenticationFilter myUsernamePasswordAuthenticationFilter() throws Exception {
         AjaxUserPasswordFilter ajaxUserPasswordFilter =  new AjaxUserPasswordFilter();
         ajaxUserPasswordFilter.setTokenUserDetailService(tokenUserDetailService);
@@ -101,6 +113,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ajaxUserPasswordFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
         return ajaxUserPasswordFilter;
     }
+
+    @Bean
+    public FilterSecurityInterceptor filterSecurityInterceptor(){
+        FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
+        interceptor.setSecurityMetadataSource(custFilterInvocationSecurityMetadataSource(operationService));
+        interceptor.setAccessDecisionManager(accessDecisionManager());
+        return interceptor;
+    }
+
+
+    @Bean
+    public FilterInvocationSecurityMetadataSource custFilterInvocationSecurityMetadataSource(OperationService operationService){
+        CustSecurityMetadataSource metadataSource = new CustSecurityMetadataSource();
+        metadataSource.setOperationService(operationService);
+        return metadataSource;
+    }
+
+    @Bean
+    public AccessDecisionManager accessDecisionManager(){
+        return new CustAccessDecisionManager();
+    }
+
 
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler(){
