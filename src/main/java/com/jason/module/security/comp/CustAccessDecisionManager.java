@@ -16,6 +16,19 @@ import java.util.Iterator;
  **/
 public class CustAccessDecisionManager implements AccessDecisionManager {
 
+    private String adminRoleCode;
+
+    public CustAccessDecisionManager() {
+    }
+
+    public CustAccessDecisionManager(String adminRoleCode) {
+        this.adminRoleCode = adminRoleCode;
+    }
+
+    public String getAdminRoleCode() {
+        return adminRoleCode == null?"ROLE_ADMIN":adminRoleCode;
+    }
+
     @Override
     public boolean supports(ConfigAttribute attribute) {
         return true;
@@ -28,6 +41,10 @@ public class CustAccessDecisionManager implements AccessDecisionManager {
 
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
+        if(hasRole(adminRoleCode,authentication)){
+            //管理员直接放行
+            return;
+        }
         if(null== configAttributes || configAttributes.size() <=0) {
             return;
         }
@@ -37,12 +54,19 @@ public class CustAccessDecisionManager implements AccessDecisionManager {
             c = iter.next();
             needRole = c.getAttribute();
             //authentication 为在注释1 中循环添加到 GrantedAuthority 对象中的权限信息集合
-            for(GrantedAuthority ga : authentication.getAuthorities()) {
-                if(needRole.trim().equals(ga.getAuthority())) {
-                    return;
-                }
+            if(hasRole(needRole,authentication)){
+                return;
             }
         }
         throw new AccessDeniedException("no right");
+    }
+
+    private boolean hasRole(String code,Authentication authentication){
+        for(GrantedAuthority ga : authentication.getAuthorities()) {
+            if(code.trim().equals(ga.getAuthority())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

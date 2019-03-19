@@ -17,7 +17,7 @@ public class UserDto extends User implements UserDetails {
 
     private String token;
 
-
+    private Long roleId;
 
     public void setUserAuthorityList(List<UserAuthority> userAuthorityList) {
         this.userAuthorityList = userAuthorityList;
@@ -76,5 +76,13 @@ public class UserDto extends User implements UserDetails {
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

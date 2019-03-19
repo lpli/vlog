@@ -25,4 +25,6 @@ public interface RoleService extends IService<Role> {
      * @param roleId 角色id
      */
     void authorization(List<Long> permissionIds,Long roleId);
+
+    Role getRole(String username);
 }

@@ -8,8 +8,10 @@ import com.jason.module.security.entity.User;
 import com.jason.module.security.dao.UserMapper;
 import com.jason.module.security.entity.UserGroup;
 import com.jason.module.security.entity.UserGroupRe;
+import com.jason.module.security.entity.UserRoleR;
 import com.jason.module.security.service.UserGroupReService;
 import com.jason.module.security.service.UserGroupService;
+import com.jason.module.security.service.UserRoleRService;
 import com.jason.module.security.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +34,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private UserGroupReService userGroupReService;
 
+    @Autowired
+    private UserRoleRService userRoleRService;
+
     @Override
-    public void saveUser(User user, UserGroup userGroup) {
+    public void saveUser(User user, UserGroup userGroup, Long roleId) {
         this.saveOrUpdate(user);
         if (userGroup != null) {
             userGroupReService.remove(new QueryWrapper<UserGroupRe>().eq("user_id",user.getId()));
@@ -42,24 +47,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             userGroupRe.setUserId(user.getId());
             userGroupReService.save(userGroupRe);
         }
-    }
-
-    @Override
-    public void saveUser(User user) {
-        this.saveUser(user,null);
-    }
-
-    @Override
-    public void updateUser(User user, UserGroup userGroup) {
-        baseMapper.updateById(user);
-        if (userGroup != null) {
-            //组关系变更,用户只能属于一个组
-            UserGroupRe userGroupRe = new UserGroupRe();
-            userGroupRe.setUserId(user.getId());
-            userGroupRe.setGroupId(userGroup.getId());
-            userGroupReService.update(userGroupRe, new QueryWrapper<UserGroupRe>().eq("user_id", user.getId()));
+        if(roleId!=null){
+            userRoleRService.remove(new QueryWrapper<UserRoleR>().eq("user_id",user.getId()));
+            UserRoleR userRoleR = new UserRoleR();
+            userRoleR.setRoleId(roleId);
+            userRoleR.setUserId(user.getId());
+            userRoleRService.save(userRoleR);
         }
     }
+
 
     @Override
     public void disableUser(User user) {

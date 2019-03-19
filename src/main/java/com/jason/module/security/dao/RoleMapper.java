@@ -2,6 +2,7 @@ package com.jason.module.security.dao;
 
 import com.jason.module.security.entity.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface RoleMapper extends BaseMapper<Role> {
     List<Role> queryGroupRoleListByUserId(Long userId);
 
     List<Role> queryRoleListByOpId(Long operationId);
+
+    Role queryRoleByUsername(@Param("username") String username);
 }

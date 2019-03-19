@@ -6,6 +6,7 @@ import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jason.module.security.entity.UserGroup;
+import com.jason.module.security.entity.UserRoleR;
 
 /**
  * <p>
@@ -21,16 +22,10 @@ public interface UserService extends IService<User> {
      * 添加用户
      * @param user 用户
      * @param userGroup 组
+     * @param roleId 用户角色ID
      */
-    void saveUser(User user, UserGroup userGroup);
+    void saveUser(User user, UserGroup userGroup, Long roleId);
 
-    void saveUser(User user);
-    /**
-     * 更新用户
-     * @param user
-     * @param userGroup
-     */
-    void updateUser(User user,UserGroup userGroup);
 
 
     /**

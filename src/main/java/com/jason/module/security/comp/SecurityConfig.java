@@ -5,6 +5,7 @@ import com.jason.module.security.filter.ContentFilter;
 import com.jason.module.security.service.OperationService;
 import com.jason.module.security.service.impl.TokenUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,9 @@ import org.springframework.util.DigestUtils;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+
+    @Value("${app.admin-code}")
+    private String adminRoleCode;
 
     @Autowired
     private TokenUserDetailService tokenUserDetailService;
@@ -93,6 +97,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterAt(myUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new ContentFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterAt(filterSecurityInterceptor(),FilterSecurityInterceptor.class);
+        //关闭匿名认证
+        http.anonymous().disable();
     }
 
     @Bean
@@ -132,7 +138,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AccessDecisionManager accessDecisionManager(){
-        return new CustAccessDecisionManager();
+        return new CustAccessDecisionManager(adminRoleCode);
     }
 
 

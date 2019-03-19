@@ -59,4 +59,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         }
 
     }
+
+    @Override
+    public Role getRole(String username) {
+        return baseMapper.queryRoleByUsername(username);
+    }
 }

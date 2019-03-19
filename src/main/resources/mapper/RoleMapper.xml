@@ -36,4 +36,11 @@
 				where pm.operation_id = #{operationId}
     </select>
 
+
+    <select id="queryRoleByUsername" resultMap="BaseResultMap">
+        select r.* from role r
+        left join user_role_r ur on ur.role_id = r.id
+        left join user u on u.id = ur.user_id
+        where u.user_name = #{username}
+     </select>
 </mapper>

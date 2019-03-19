@@ -70,6 +70,12 @@ public class RoleController extends BaseController {
         return json;
     }
 
+    @GetMapping("/list")
+    public JsonResponse<List<Role>> list(){
+        List<Role> list = roleService.list(new QueryWrapper<Role>().eq("creator",this.getToken().getUsername()));
+        return new JsonResponse<>(ResponseCode.SUCCESS,list);
+    }
+
     @GetMapping("/check")
     public JsonResponse check(Role role) {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();

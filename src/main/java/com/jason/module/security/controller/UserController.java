@@ -8,8 +8,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
 import com.jason.module.security.dto.UserDto;
+import com.jason.module.security.entity.Role;
 import com.jason.module.security.entity.User;
 import com.jason.module.security.entity.UserGroup;
+import com.jason.module.security.service.RoleService;
 import com.jason.module.security.service.UserGroupService;
 import com.jason.module.security.service.UserService;
 import com.jason.module.security.util.TokenUtil;
@@ -46,6 +48,10 @@ public class UserController extends  BaseController{
 
     @Autowired
     private UserGroupService userGroupService;
+
+    @Autowired
+    private RoleService roleService;
+
     /**
      * 分页查询
      * @param pageSize
@@ -87,9 +93,12 @@ public class UserController extends  BaseController{
         if(userDto.getGroupId() == null){
             return new JsonResponse(ResponseCode.FAILURE.getCode(),"用户组不能为空");
         }
+        if(userDto.getRoleId() == null){
+            return new JsonResponse(ResponseCode.FAILURE.getCode(),"角色不能为空");
+        }
         UserGroup userGroup = new UserGroup();
         userGroup.setId(groupId);
-        userService.saveUser(userDto,userGroup);
+        userService.saveUser(userDto,userGroup,userDto.getRoleId());
         return JsonResponse.buildSuccess();
     }
 
@@ -132,13 +141,24 @@ public class UserController extends  BaseController{
         return new JsonResponse<>(ResponseCode.SUCCESS,userGroup);
     }
 
+    @GetMapping("/{username}/role")
+    public JsonResponse<Role> getRole(@PathVariable("username")String  username){
+        Role role = roleService.getRole(username);
+        return new JsonResponse<>(ResponseCode.SUCCESS,role);
+    }
+
     @GetMapping("/check")
     public JsonResponse checkUser(UserDto userDto){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if(userDto.getId()!=null){
             queryWrapper = queryWrapper.ne("id",userDto.getId());
         }
-        if(StringUtils.isNotEmpty(userDto.getNickName())){
+        if(StringUtils.isNotEmpty(userDto.getUsername())){
+            int count = userService.count(queryWrapper.eq("user_name",userDto.getUsername()));
+            if(count > 0){
+                return JsonResponse.buildFail("用户名已被使用");
+            }
+        }else if(StringUtils.isNotEmpty(userDto.getNickName())){
             int count = userService.count(queryWrapper.eq("nick_name",userDto.getNickName()));
             if(count > 0){
                 return JsonResponse.buildFail("昵称已被使用");
