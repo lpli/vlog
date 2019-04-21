@@ -45,9 +45,6 @@ public class CustAccessDecisionManager implements AccessDecisionManager {
             //管理员直接放行
             return;
         }
-        if(null== configAttributes || configAttributes.size() <=0) {
-            return;
-        }
         ConfigAttribute c;
         String needRole;
         for(Iterator<ConfigAttribute> iter = configAttributes.iterator(); iter.hasNext(); ) {

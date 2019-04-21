@@ -8,6 +8,8 @@ app:
   img-server: http://localhost:9000/img/
 spring:
   profiles: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
   http:
     multipart:
       max-file-size: 10Mb

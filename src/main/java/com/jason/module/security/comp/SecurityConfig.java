@@ -121,8 +121,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public FilterSecurityInterceptor filterSecurityInterceptor(){
-        FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
+    public CustFilterSecurityInterceptor filterSecurityInterceptor(){
+        CustFilterSecurityInterceptor interceptor = new CustFilterSecurityInterceptor();
         interceptor.setSecurityMetadataSource(custFilterInvocationSecurityMetadataSource(operationService));
         interceptor.setAccessDecisionManager(accessDecisionManager());
         return interceptor;

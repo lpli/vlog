@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jason.module.article.dao.CarCategoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jason.module.article.entity.CarCategory">
+        <id column="id" property="id" />
+        <result column="band" property="band" />
+        <result column="letter" property="letter" />
+        <result column="model" property="model" />
+        <result column="name" property="name" />
+        <result column="price" property="price" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, band, letter, model, `name`, price
+    </sql>
+
+</mapper>

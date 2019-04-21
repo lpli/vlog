@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jason.module.article.dao.ArticleLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jason.module.article.entity.ArticleLog">
+        <id column="id" property="id" />
+        <result column="article_id" property="articleId" />
+        <result column="article_status" property="articleStatus" />
+        <result column="article_content" property="articleContent" />
+        <result column="article_title" property="articleTitle" />
+        <result column="operator" property="operator" />
+        <result column="operate_time" property="operateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, article_id, article_status, article_content, article_title, operator, operate_time
+    </sql>
+
+</mapper>
