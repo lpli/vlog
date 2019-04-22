@@ -107,6 +107,7 @@ public class ArticleController extends BaseController {
 
     /**
      * 稿件详情
+     *
      * @param id
      * @return
      */
@@ -121,6 +122,24 @@ public class ArticleController extends BaseController {
         return JsonResponse.buildSuccess(article);
     }
 
+    /**
+     * 逻辑删除稿件
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    public JsonResponse<Article> delete(@PathVariable("id") String id) {
+        QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        Article article = articleService.getOne(queryWrapper);
+        if (article == null) {
+            return JsonResponse.buildFail("稿件不存在");
+        }
+        articleService.delete(article);
+        return JsonResponse.buildSuccess();
+    }
+
 
     /**
      * 我的稿件
@@ -131,9 +150,10 @@ public class ArticleController extends BaseController {
      */
     @GetMapping("/myList")
     public JsonResponse<Page<ArticleVO>> myList(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                              @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+                                                @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("author_id", this.getToken().getUsername());
+        queryWrapper.ne("status",ArticleStatusEnum.DELETED.getCode());
         queryWrapper.orderByDesc("id");
         Page<ArticleVO> data = articleService.getPageList(pageNo, pageSize, queryWrapper);
         JsonResponse<Page<ArticleVO>> response = new JsonResponse<>();
@@ -144,17 +164,18 @@ public class ArticleController extends BaseController {
 
     /**
      * 待审核稿件
+     *
      * @param pageNo
      * @param pageSize
      * @return
      */
     @GetMapping("/approveList")
     public JsonResponse<Page<ArticleVO>> approveList(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                                   @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize){
-        List<String> userList =  userService.selectSubUserByGroupId(this.getToken());
+                                                     @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+        List<String> userList = userService.selectSubUserByGroupId(this.getToken());
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("author_id", userList);
-        queryWrapper.eq("status",ArticleStatusEnum.APPROVE.getCode());
+        queryWrapper.eq("status", ArticleStatusEnum.APPROVE.getCode());
         queryWrapper.orderByDesc("id");
         Page<ArticleVO> data = articleService.getPageList(pageNo, pageSize, queryWrapper);
         JsonResponse<Page<ArticleVO>> response = new JsonResponse<>();
