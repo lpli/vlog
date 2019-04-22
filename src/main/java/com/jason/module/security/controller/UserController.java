@@ -1,9 +1,7 @@
 package com.jason.module.security.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
@@ -14,7 +12,6 @@ import com.jason.module.security.entity.UserGroup;
 import com.jason.module.security.service.RoleService;
 import com.jason.module.security.service.UserGroupService;
 import com.jason.module.security.service.UserService;
-import com.jason.module.security.util.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -33,6 +33,16 @@
             </if>
         </trim>
     </select>
+
+    <select id="selectUserByGroupId" resultType="string">
+    select u.user_name from user u
+    left join user_group_re ug on ug.user_id = u.id
+    <trim prefix="WHERE" prefixOverrides="AND||OR">
+        <if test="query.groupId != null">
+            AND FIND_IN_SET(ug.group_id,getChildLst(#{query.groupId})) >0
+        </if>
+    </trim>
+    </select>
 <!-- 查询组下的所有用户-->
     <select id="selectAllUserByGroupId" resultType="com.jason.module.security.entity.User">
         select u.id, u.user_name, u.nick_name, u.email, u.phone, u.enable, u.create_time, u.update_time from user u

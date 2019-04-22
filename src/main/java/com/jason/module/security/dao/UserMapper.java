@@ -21,5 +21,6 @@ import java.util.Map;
 public interface UserMapper extends BaseMapper<User> {
 
     List<User> selectSubUserByGroupId(IPage<User> page,@Param("query") UserDto query);
+    List<String> selectUserByGroupId(@Param("query") UserDto query);
     List<User> selectAllUserByGroupId(IPage<User> page,@Param("query") UserDto query);
 }

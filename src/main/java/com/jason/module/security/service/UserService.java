@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jason.module.security.entity.UserGroup;
 import com.jason.module.security.entity.UserRoleR;
 
+import java.util.List;
+
 /**
  * <p>
  * 用户表 服务类
@@ -44,4 +46,5 @@ public interface UserService extends IService<User> {
     Page<User> selectSubUserByGroupId(IPage<User> page, UserDto query);
     Page<User> selectAllUserByGroupId(IPage<User> page, UserDto query);
 
+    List<String> selectSubUserByGroupId(UserDto query);
 }

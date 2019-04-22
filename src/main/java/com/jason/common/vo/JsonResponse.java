@@ -49,6 +49,10 @@ public class JsonResponse<T> extends BaseResponse implements Serializable {
         return new JsonResponse(ResponseCode.SUCCESS.getCode(),ResponseCode.SUCCESS.getMsg());
     }
 
+    public static <T> JsonResponse buildSuccess(T data){
+        return new JsonResponse(ResponseCode.SUCCESS.getCode(),ResponseCode.SUCCESS.getMsg(),data);
+    }
+
     public static JsonResponse buildFail(){
         return new JsonResponse(ResponseCode.FAILURE.getCode(),ResponseCode.FAILURE.getMsg());
     }

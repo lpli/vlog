@@ -3,18 +3,25 @@ package com.jason.module.article.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jason.module.article.dao.ArticleCoverMapper;
 import com.jason.module.article.dao.ArticleLogMapper;
-import com.jason.module.article.entity.Article;
 import com.jason.module.article.dao.ArticleMapper;
+import com.jason.module.article.entity.Article;
+import com.jason.module.article.entity.ArticleCover;
 import com.jason.module.article.entity.ArticleLog;
 import com.jason.module.article.enums.ArticleStatusEnum;
+import com.jason.module.article.service.ArticleCoverService;
 import com.jason.module.article.service.ArticleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jason.module.article.vo.ArticleVO;
 import com.jason.module.security.dto.UserDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * <p>
@@ -30,12 +37,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Autowired
     private ArticleLogMapper articleLogMapper;
 
+    @Autowired
+    private ArticleCoverService articleCoverService;
+
     @Override
-    public void draft(Article article) {
+    @Transactional(rollbackFor = Exception.class)
+    public void draft(ArticleVO article) {
         Date now = new Date();
         article.setStatus(ArticleStatusEnum.DRAFT.getCode());
         article.setUpdateTime(now);
         this.saveOrUpdate(article);
+
+        saveCover(article);
         ArticleLog log = new ArticleLog();
         log.setArticleId(article.getId());
         log.setArticleContent(article.getContent());
@@ -46,12 +59,29 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleLogMapper.insert(log);
     }
 
+    private void saveCover(ArticleVO article){
+        if(CollectionUtils.isEmpty(article.getCoverList())){
+            return;
+        }
+        QueryWrapper<ArticleCover> queryWrapper =new QueryWrapper<>();
+        queryWrapper.eq("article_id",article.getId());
+        articleCoverService.remove(queryWrapper);
+        for(ArticleCover cover:article.getCoverList()){
+            cover.setArticleId(article.getId());
+        }
+        articleCoverService.saveBatch(article.getCoverList());
+    }
     @Override
-    public void approve(Article article) {
+    @Transactional(rollbackFor = Exception.class)
+    public void approve(ArticleVO article) {
         Date now = new Date();
         article.setStatus(ArticleStatusEnum.APPROVE.getCode());
+        if(article.getCreateTime() == null){
+            article.setCreateTime(now);
+        }
         article.setUpdateTime(now);
-        this.updateById(article);
+        this.saveOrUpdate(article);
+        saveCover(article);
         ArticleLog log = new ArticleLog();
         log.setArticleId(article.getId());
         log.setArticleContent(article.getContent());
@@ -63,6 +93,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void reject(Article article, UserDto userDto, String comment) {
         Date now = new Date();
         article.setStatus(ArticleStatusEnum.DRAFT.getCode());
@@ -80,6 +111,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void pass(Article article, UserDto userDto, String comment) {
         Date now = new Date();
         article.setStatus(ArticleStatusEnum.PUBLISH.getCode());
@@ -98,17 +130,47 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public Page<Article> getPageList(Integer pageNo, Integer pageSize, QueryWrapper<Article> queryWrapper) {
+    public Page<ArticleVO> getPageList(Integer pageNo, Integer pageSize, QueryWrapper<Article> queryWrapper) {
         Page<Article> page = new Page<>();
         page.setCurrent(pageNo);
         page.setSize(pageSize);
+
         IPage<Article> iPage = baseMapper.selectPage(page,queryWrapper);
-        page.setRecords(iPage.getRecords());
-        page.setTotal(iPage.getTotal());
-        return page;
+        List<Long> articleIds = new ArrayList<>();
+        List<ArticleVO> dataList =new ArrayList<>();
+        for(Article article:iPage.getRecords()){
+            articleIds.add(article.getId());
+            ArticleVO vo = new ArticleVO();
+            BeanUtils.copyProperties(article,vo);
+            dataList.add(vo);
+        }
+        if(!articleIds.isEmpty()){
+            QueryWrapper<ArticleCover> coverQueryWrapper = new QueryWrapper<>();
+            coverQueryWrapper.in("article_id",articleIds);
+            List<ArticleCover> list = articleCoverService.list(coverQueryWrapper);
+            Map<Long,List<ArticleCover>> map = new HashMap<>();
+            for(ArticleCover cover:list){
+                if(!map.containsKey(cover.getArticleId())){
+                    List<ArticleCover> arr = new ArrayList<>();
+                    map.put(cover.getArticleId(),arr);
+                }
+                map.get(cover.getArticleId()).add(cover);
+            }
+
+            for(ArticleVO article:dataList){
+                article.setCoverList(map.get(article.getId()));
+            }
+        }
+        Page<ArticleVO> pageVO = new Page<>();
+        pageVO.setCurrent(pageNo);
+        pageVO.setSize(pageSize);
+        pageVO.setRecords(dataList);
+        pageVO.setTotal(iPage.getTotal());
+        return pageVO;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Article article) {
         Date now = new Date();
         article.setStatus(ArticleStatusEnum.DELETED.getCode());

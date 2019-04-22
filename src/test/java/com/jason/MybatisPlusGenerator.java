@@ -51,7 +51,7 @@ public class MybatisPlusGenerator {
                         .setServiceImpl("service.impl")
         ).setStrategy(new StrategyConfig().setCapitalMode(true).setNaming(NamingStrategy.underline_to_camel)
                 //包含表名
-                .setInclude("article_log","article"))
+                .setInclude("article_cover"))
                 .setCfg(new InjectionConfig() {
             @Override
             public void initMap() {

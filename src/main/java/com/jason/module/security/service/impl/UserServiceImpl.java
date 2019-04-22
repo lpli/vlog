@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,5 +90,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         pageDto.setTotal(page.getTotal());
         pageDto.setRecords(list);
         return pageDto;
+    }
+
+    @Override
+    public List<String> selectSubUserByGroupId(UserDto query) {
+        return baseMapper.selectUserByGroupId(query);
     }
 }
