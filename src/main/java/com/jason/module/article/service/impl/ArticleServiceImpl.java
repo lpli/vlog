@@ -96,7 +96,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Transactional(rollbackFor = Exception.class)
     public void reject(Article article, UserDto userDto, String comment) {
         Date now = new Date();
-        article.setStatus(ArticleStatusEnum.DRAFT.getCode());
+        article.setStatus(ArticleStatusEnum.REJECTED.getCode());
         article.setUpdateTime(now);
         this.updateById(article);
         ArticleLog log = new ArticleLog();

@@ -10,7 +10,8 @@ package com.jason.module.article.enums;
 public enum ArticleStatusEnum {
     DRAFT(0, "草稿"),
     APPROVE(1, "审稿中"),
-    PUBLISH(2, "发布完成"),
+    PUBLISH(2, "已发布"),
+    REJECTED(3, "审核未通过"),
     DELETED(-1,"删除");
 
     private int code;

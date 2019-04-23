@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
 import com.jason.module.article.entity.Article;
+import com.jason.module.article.entity.ArticleCover;
 import com.jason.module.article.enums.ArticleStatusEnum;
+import com.jason.module.article.service.ArticleCoverService;
 import com.jason.module.article.service.ArticleService;
 import com.jason.module.article.vo.ArticleVO;
 import com.jason.module.security.controller.BaseController;
 import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +40,9 @@ public class ArticleController extends BaseController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ArticleCoverService articleCoverService;
+
     /**
      * 保存草稿
      *
@@ -58,7 +64,7 @@ public class ArticleController extends BaseController {
      * @param article
      * @return
      */
-    @PostMapping("/publish")
+    @PostMapping("/toApprove")
     public JsonResponse publish(@RequestBody ArticleVO article) {
         UserDto user = this.getToken();
         article.setAuthorId(user.getUsername());
@@ -112,14 +118,18 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping("/{id}")
-    public JsonResponse<Article> detail(@PathVariable("id") String id) {
+    public JsonResponse<ArticleVO> detail(@PathVariable("id") String id) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         Article article = articleService.getOne(queryWrapper);
         if (article == null) {
             return JsonResponse.buildFail("稿件不存在");
         }
-        return JsonResponse.buildSuccess(article);
+        ArticleVO vo = new ArticleVO();
+        BeanUtils.copyProperties(article,vo);
+        List<ArticleCover> coverList = articleCoverService.list(new QueryWrapper<ArticleCover>().eq("article_id",article.getId()));
+        vo.setCoverList(coverList);
+        return JsonResponse.buildSuccess(vo);
     }
 
     /**
