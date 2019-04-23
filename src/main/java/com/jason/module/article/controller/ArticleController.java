@@ -172,9 +172,11 @@ public class ArticleController extends BaseController {
     @GetMapping("/approveList")
     public JsonResponse<Page<ArticleVO>> approveList(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
                                                      @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
-        List<String> userList = userService.selectSubUserByGroupId(this.getToken());
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("author_id", userList);
+        if(!this.isAdmin()){
+            List<String> userList = userService.selectSubUserByGroupId(this.getToken());
+            queryWrapper.in("author_id", userList);
+        }
         queryWrapper.eq("status", ArticleStatusEnum.APPROVE.getCode());
         queryWrapper.orderByDesc("id");
         Page<ArticleVO> data = articleService.getPageList(pageNo, pageSize, queryWrapper);
