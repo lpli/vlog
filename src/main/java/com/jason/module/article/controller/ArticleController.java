@@ -79,8 +79,8 @@ public class ArticleController extends BaseController {
      * @param comment
      * @return
      */
-    @PostMapping("/approve/{id}/reject")
-    public JsonResponse reject(@PathVariable("id") String id, String comment) {
+    @GetMapping("/approve/{id}/reject")
+    public JsonResponse reject(@PathVariable("id") String id, @RequestParam("comment") String comment) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         Article article = articleService.getOne(queryWrapper);
@@ -99,8 +99,8 @@ public class ArticleController extends BaseController {
      * @param comment
      * @return
      */
-    @PostMapping("/approve/{id}/pass")
-    public JsonResponse pass(@PathVariable("id") String id, String comment) {
+    @GetMapping("/approve/{id}/pass")
+    public JsonResponse pass(@PathVariable("id") String id,@RequestParam(value = "comment",required = false) String comment) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         Article article = articleService.getOne(queryWrapper);
