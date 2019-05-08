@@ -5,7 +5,7 @@ app:
   admin-code: ADMIN
   img-path: D:/upload/
   img-type: jpg,png,bmp,gif
-  img-server: http://localhost:9000/img/
+  img-server-path: /img/
 spring:
   profiles: dev
   jackson:

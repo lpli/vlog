@@ -17,11 +17,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Value("${app.img-path}")
     private String IMG_PATH;
 
+    @Value("${app.img-server-path}")
+    private String SERVER_PATH;
+
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //图片访问路径
-        registry.addResourceHandler("/img/**").addResourceLocations(StringUtils.join("file:", IMG_PATH));
+        registry.addResourceHandler(StringUtils.join(SERVER_PATH,"**")).addResourceLocations(StringUtils.join("file:", IMG_PATH));
         super.addResourceHandlers(registry);
     }
 }

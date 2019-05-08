@@ -6,6 +6,7 @@ import com.jason.module.file.entity.ResourceImage;
 import com.jason.module.file.service.ResourceImageService;
 import com.jason.module.file.util.FileTypeUtil;
 import com.jason.module.file.vo.ImageVO;
+import com.jason.module.security.util.HttpUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -41,8 +44,11 @@ public class ResourceImageController {
     @Value("${app.img-path}")
     private String IMG_PATH;
 
-    @Value("${app.img-server}")
-    private String IMG_SERVER;
+    @Value("${app.img-server-path}")
+    private String IMG_SERVER_PATH;
+
+    @Value("${server.port}")
+    private int PORT;
 
     @Value("#{'${app.img-type}'.split(',')}")
     private List<String> imgType;
@@ -50,8 +56,9 @@ public class ResourceImageController {
     @Autowired
     private ResourceImageService resourceImageService;
 
+
     @PostMapping("/upload")
-    public JsonResponse<String> upload(@RequestParam("file") MultipartFile file){
+    public JsonResponse<String> upload(HttpServletRequest request, @RequestParam("file") MultipartFile file){
         long size = file.getSize();
         if(size == 0){
             return JsonResponse.buildFail("文件为空");
@@ -74,7 +81,7 @@ public class ResourceImageController {
         image.setSize(size);
         image.setUploadTime(Calendar.getInstance().getTime());
         JsonResponse<String> response =  resourceImageService.upload(file,image);
-        response.setData(StringUtils.join(IMG_SERVER,response.getData()));
+        response.setData(StringUtils.join(request.getScheme(),"://",request.getServerName(),":",PORT,IMG_SERVER_PATH,response.getData()));
         return response;
     }
 
