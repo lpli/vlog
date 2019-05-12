@@ -41,6 +41,8 @@ public interface ArticleService extends IService<Article> {
      */
     void pass(Article article, UserDto userDto,String comment);
 
+    void revert(Article article,UserDto userDto);
+
     /**
      * 稿件列表
      * @param pageNo

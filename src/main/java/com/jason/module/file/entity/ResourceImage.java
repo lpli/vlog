@@ -13,7 +13,7 @@ import java.util.Date;
  * </p>
  *
  * @author lpli
- * @since 2019-03-15
+ * @since 2019-05-11
  */
 public class ResourceImage extends Model<ResourceImage> {
 
@@ -22,7 +22,7 @@ public class ResourceImage extends Model<ResourceImage> {
     /**
      * 图片id
      */
-    @TableId(type=IdType.INPUT)
+    @TableId(value = "id", type = IdType.NONE)
     private String id;
 
     /**
@@ -44,6 +44,16 @@ public class ResourceImage extends Model<ResourceImage> {
      * 上传时间
      */
     private Date uploadTime;
+
+    /**
+     * 标题
+     */
+    private String title;
+
+    /**
+     * 组
+     */
+    private Long groupId;
 
 
     public String getId() {
@@ -86,6 +96,22 @@ public class ResourceImage extends Model<ResourceImage> {
         this.uploadTime = uploadTime;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
     @Override
     protected Serializable pkVal() {
         return this.id;
@@ -99,6 +125,8 @@ public class ResourceImage extends Model<ResourceImage> {
         ", path=" + path +
         ", size=" + size +
         ", uploadTime=" + uploadTime +
+        ", title=" + title +
+        ", groupId=" + groupId +
         "}";
     }
 }

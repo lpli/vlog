@@ -7,8 +7,10 @@ import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
 import com.jason.module.article.entity.Article;
 import com.jason.module.article.entity.ArticleCover;
+import com.jason.module.article.entity.ArticleLog;
 import com.jason.module.article.enums.ArticleStatusEnum;
 import com.jason.module.article.service.ArticleCoverService;
+import com.jason.module.article.service.ArticleLogService;
 import com.jason.module.article.service.ArticleService;
 import com.jason.module.article.vo.ArticleVO;
 import com.jason.module.security.controller.BaseController;
@@ -42,6 +44,9 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private ArticleCoverService articleCoverService;
+
+    @Autowired
+    private ArticleLogService articleLogService;
 
     /**
      * 保存草稿
@@ -100,7 +105,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping("/approve/{id}/pass")
-    public JsonResponse pass(@PathVariable("id") String id,@RequestParam(value = "comment",required = false) String comment) {
+    public JsonResponse pass(@PathVariable("id") String id, @RequestParam(value = "comment", required = false) String comment) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         Article article = articleService.getOne(queryWrapper);
@@ -108,6 +113,19 @@ public class ArticleController extends BaseController {
             return JsonResponse.buildFail("稿件不存在");
         }
         articleService.pass(article, this.getToken(), comment);
+        return JsonResponse.buildSuccess();
+    }
+
+
+    @GetMapping("/{id}/revert")
+    public JsonResponse revert(@PathVariable("id") String id) {
+        QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        Article article = articleService.getOne(queryWrapper);
+        if (article == null) {
+            return JsonResponse.buildFail("稿件不存在");
+        }
+        articleService.revert(article, this.getToken());
         return JsonResponse.buildSuccess();
     }
 
@@ -126,8 +144,8 @@ public class ArticleController extends BaseController {
             return JsonResponse.buildFail("稿件不存在");
         }
         ArticleVO vo = new ArticleVO();
-        BeanUtils.copyProperties(article,vo);
-        List<ArticleCover> coverList = articleCoverService.list(new QueryWrapper<ArticleCover>().eq("article_id",article.getId()));
+        BeanUtils.copyProperties(article, vo);
+        List<ArticleCover> coverList = articleCoverService.list(new QueryWrapper<ArticleCover>().eq("article_id", article.getId()));
         vo.setCoverList(coverList);
         return JsonResponse.buildSuccess(vo);
     }
@@ -163,8 +181,8 @@ public class ArticleController extends BaseController {
                                                 @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("author_id", this.getToken().getUsername());
-        queryWrapper.ne("status",ArticleStatusEnum.DELETED.getCode());
-        queryWrapper.orderByDesc("id");
+        queryWrapper.ne("status", ArticleStatusEnum.DELETED.getCode());
+        queryWrapper.orderByDesc("update_time");
         Page<ArticleVO> data = articleService.getPageList(pageNo, pageSize, queryWrapper);
         JsonResponse<Page<ArticleVO>> response = new JsonResponse<>();
         response.setCode(ResponseCode.SUCCESS.getCode());
@@ -183,7 +201,7 @@ public class ArticleController extends BaseController {
     public JsonResponse<Page<ArticleVO>> approveList(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
                                                      @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
-        if(!this.isAdmin()){
+        if (!this.isAdmin()) {
             List<String> userList = userService.selectSubUserByGroupId(this.getToken());
             queryWrapper.in("author_id", userList);
         }
@@ -194,6 +212,21 @@ public class ArticleController extends BaseController {
         response.setCode(ResponseCode.SUCCESS.getCode());
         response.setData(data);
         return response;
+    }
+
+
+    /**
+     * 获取审核未通过意见
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/comment")
+    public JsonResponse<ArticleLog> getComment(@PathVariable("id") Long id) {
+        ArticleLog articleLog = articleLogService.getOne(new QueryWrapper<ArticleLog>()
+                .eq("article_id", id).eq("article_status",
+                        ArticleStatusEnum.REJECTED.getCode()).orderByDesc("operate_time"));
+        return JsonResponse.buildSuccess(articleLog);
     }
 
 }

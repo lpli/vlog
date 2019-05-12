@@ -1,19 +1,25 @@
 package com.jason.module.file.service.impl;
 
-import com.jason.common.enums.ResponseCode;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.file.dto.ImageDTO;
+import com.jason.module.file.entity.ImageGroup;
 import com.jason.module.file.entity.ResourceImage;
 import com.jason.module.file.dao.ResourceImageMapper;
+import com.jason.module.file.service.ImageGroupService;
 import com.jason.module.file.service.ResourceImageService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jason.module.file.vo.ImageCountVO;
 import com.jason.module.file.vo.ImageVO;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -21,21 +27,57 @@ import java.io.IOException;
  * </p>
  *
  * @author lpli
- * @since 2019-03-15
+ * @since 2019-05-11
  */
 @Service
-@Slf4j
 public class ResourceImageServiceImpl extends ServiceImpl<ResourceImageMapper, ResourceImage> implements ResourceImageService {
 
+    @Autowired
+    private ImageGroupService imageGroupService;
+
     @Override
-    public JsonResponse<String> upload(MultipartFile file, ImageVO image) {
-        try {
-            FileUtils.copyToFile(file.getInputStream(),new File(image.getSavePath()));
-            baseMapper.insert(image);
-        } catch (IOException e) {
-            log.error("上传文件异常",e);
-            return JsonResponse.buildFail("上传文件异常");
+    @Transactional
+    public JsonResponse<List<ImageVO>> batchSave(List<ImageDTO> dtoList) throws IOException {
+        List<ResourceImage> list = new ArrayList<>();
+        List<ImageVO> voList = new ArrayList<>();
+        for(ImageDTO dto:dtoList){
+            ResourceImage image = new ResourceImage();
+            image.setId(dto.getId());
+            image.setName(dto.getName());
+            image.setPath(dto.getPath());
+            image.setSize(dto.getSize());
+            image.setTitle(dto.getTitle());
+            image.setUploadTime(dto.getUploadTime());
+            image.setGroupId(dto.getGroupId());
+            list.add(image);
+
+            ImageVO vo = new ImageVO();
+            vo.setTitle(image.getTitle());
+            vo.setUrl(image.getPath());
+            voList.add(vo);
+            FileUtils.copyToFile(dto.getFile().getInputStream(),new File(dto.getSavePath()));
         }
-        return new JsonResponse<>(ResponseCode.SUCCESS,image.getPath());
+        this.saveBatch(list);
+        return JsonResponse.buildSuccess(voList);
+    }
+
+    @Override
+    public List<ImageCountVO> countList() {
+        List<ImageGroup> groupList = imageGroupService.list();
+        List<ImageCountVO> voList = new ArrayList<>();
+        ImageCountVO vo = new ImageCountVO();
+        vo.setTotal(Long.valueOf(this.count()));
+        vo.setGroupName("全部图片");
+        vo.setGroupId(Long.valueOf(-1));
+        voList.add(vo);
+        for(ImageGroup imageGroup:groupList){
+            int count = this.count(new QueryWrapper<ResourceImage>().eq("group_id",imageGroup.getId()));
+            vo = new ImageCountVO();
+            vo.setTotal(Long.valueOf(count));
+            vo.setGroupId(imageGroup.getId());
+            vo.setGroupName(imageGroup.getName());
+            voList.add(vo);
+        }
+        return voList;
     }
 }

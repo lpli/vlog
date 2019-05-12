@@ -1,19 +1,44 @@
 package com.jason.module.file.vo;
 
-import com.jason.module.file.entity.ResourceImage;
+public class ImageVO {
 
-/**
- * @Author liliping
- * @Date 2019/3/15
- **/
-public class ImageVO extends ResourceImage {
-    private String savePath;
+    private String id;
 
-    public String getSavePath() {
-        return savePath;
+    private String title;
+
+    private String url;
+
+    private Boolean checked;
+
+    public String getId() {
+        return id;
     }
 
-    public void setSavePath(String savePath) {
-        this.savePath = savePath;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
     }
 }

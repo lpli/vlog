@@ -51,7 +51,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         saveCover(article);
         ArticleLog log = new ArticleLog();
         log.setArticleId(article.getId());
-        log.setArticleContent(article.getContent());
         log.setArticleTitle(article.getTitle());
         log.setOperator(article.getAuthorId());
         log.setOperateTime(now);
@@ -84,7 +83,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         saveCover(article);
         ArticleLog log = new ArticleLog();
         log.setArticleId(article.getId());
-        log.setArticleContent(article.getContent());
         log.setArticleTitle(article.getTitle());
         log.setOperator(article.getAuthorId());
         log.setOperateTime(now);
@@ -101,11 +99,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         this.updateById(article);
         ArticleLog log = new ArticleLog();
         log.setArticleId(article.getId());
-        log.setArticleContent(article.getContent());
         log.setArticleTitle(article.getTitle());
         log.setOperator(userDto.getUsername());
         log.setOperateTime(now);
-        log.setArticleStatus(ArticleStatusEnum.DRAFT.getCode());
+        log.setArticleStatus(ArticleStatusEnum.REJECTED.getCode());
         log.setComment(comment);
         articleLogMapper.insert(log);
     }
@@ -120,7 +117,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         this.updateById(article);
         ArticleLog log = new ArticleLog();
         log.setArticleId(article.getId());
-        log.setArticleContent(article.getContent());
         log.setArticleTitle(article.getTitle());
         log.setOperator(userDto.getUsername());
         log.setOperateTime(now);
@@ -170,6 +166,22 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    public void revert(Article article, UserDto userDto) {
+        Date now = new Date();
+        article.setStatus(ArticleStatusEnum.DRAFT.getCode());
+        article.setUpdateTime(now);
+        article.setPublishTime(now);
+        this.updateById(article);
+        ArticleLog log = new ArticleLog();
+        log.setArticleId(article.getId());
+        log.setArticleTitle(article.getTitle());
+        log.setOperator(userDto.getUsername());
+        log.setOperateTime(now);
+        log.setArticleStatus(ArticleStatusEnum.DRAFT.getCode());
+        articleLogMapper.insert(log);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Article article) {
         Date now = new Date();
@@ -178,7 +190,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         updateById(article);
         ArticleLog log = new ArticleLog();
         log.setArticleId(article.getId());
-        log.setArticleContent(article.getContent());
         log.setArticleTitle(article.getTitle());
         log.setOperator(article.getAuthorId());
         log.setOperateTime(now);

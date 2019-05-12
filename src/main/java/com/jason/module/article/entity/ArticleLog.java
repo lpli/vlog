@@ -33,11 +33,6 @@ public class ArticleLog extends Model<ArticleLog> {
     private Integer articleStatus;
 
     /**
-     * 文章内容
-     */
-    private String articleContent;
-
-    /**
      * 文章标题
      */
     private String articleTitle;
@@ -82,13 +77,6 @@ public class ArticleLog extends Model<ArticleLog> {
         this.articleStatus = articleStatus;
     }
 
-    public String getArticleContent() {
-        return articleContent;
-    }
-
-    public void setArticleContent(String articleContent) {
-        this.articleContent = articleContent;
-    }
 
     public String getArticleTitle() {
         return articleTitle;
@@ -134,7 +122,6 @@ public class ArticleLog extends Model<ArticleLog> {
         "id=" + id +
         ", articleId=" + articleId +
         ", articleStatus=" + articleStatus +
-        ", articleContent=" + articleContent +
         ", articleTitle=" + articleTitle +
         ", operator=" + operator +
         ", operateTime=" + operateTime +

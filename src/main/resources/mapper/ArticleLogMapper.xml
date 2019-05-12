@@ -7,7 +7,6 @@
         <id column="id" property="id" />
         <result column="article_id" property="articleId" />
         <result column="article_status" property="articleStatus" />
-        <result column="article_content" property="articleContent" />
         <result column="article_title" property="articleTitle" />
         <result column="operator" property="operator" />
         <result column="operate_time" property="operateTime" />
@@ -15,7 +14,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, article_id, article_status, article_content, article_title, operator, operate_time
+        id, article_id, article_status, article_title, operator, operate_time
     </sql>
 
 </mapper>

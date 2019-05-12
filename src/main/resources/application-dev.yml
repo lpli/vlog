@@ -4,15 +4,15 @@ app:
   default-password: 123456
   admin-code: ADMIN
   img-path: D:/upload/
-  img-type: jpg,png,bmp,gif
-  img-server-path: /img/
+  img-type: jpg,png,gif
+  img-server-path: http://localhost:${server.port}/img/
 spring:
   profiles: dev
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
   http:
     multipart:
-      max-file-size: 10Mb
+      max-file-size: 5Mb
       max-request-size: 100Mb
   cache:
     type: caffeine
@@ -63,7 +63,7 @@ mybatis-plus:
   mapper-locations:
     - classpath:mapper/*.xml
   # 实体扫描，多个package用逗号或者分号分隔
-  type-aliases-package: com.jason.module.security.entity
+  type-aliases-package: com.jason.module.*.entity
   # 检测mybatis配置文件是否存在
   check-config-location: false
 

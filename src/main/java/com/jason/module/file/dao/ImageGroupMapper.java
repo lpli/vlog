@@ -1,6 +1,6 @@
 package com.jason.module.file.dao;
 
-import com.jason.module.file.entity.ResourceImage;
+import com.jason.module.file.entity.ImageGroup;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author lpli
  * @since 2019-05-11
  */
-public interface ResourceImageMapper extends BaseMapper<ResourceImage> {
+public interface ImageGroupMapper extends BaseMapper<ImageGroup> {
 
 }
