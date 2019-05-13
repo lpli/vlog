@@ -55,7 +55,7 @@ public class UserController extends  BaseController{
      * @param pageNo
      * @return
      */
-    @GetMapping("/pageList")
+    @GetMapping(value="/pageList",name="用户分页列表")
     public JsonResponse<Page<User>> list(long pageSize,long pageNo,UserDto userDto){
         JsonResponse<Page<User>> json = new JsonResponse<>();
         Page<User> page = new Page<>();
@@ -79,7 +79,7 @@ public class UserController extends  BaseController{
      * @param userDto
      * @return
      */
-    @PostMapping("/create")
+    @PostMapping(value="/create",name="新增用户")
     public JsonResponse add(@RequestBody UserDto userDto){
         userDto.setCreateTime(new Date());
         userDto.setPassword(passwordEncoder.encode(defaultPassword));
@@ -100,7 +100,7 @@ public class UserController extends  BaseController{
     }
 
 
-    @PutMapping("/update")
+    @PutMapping(value="/update",name="修改用户")
     public JsonResponse update(@RequestBody UserDto userDto){
         JsonResponse jsonResponse = new JsonResponse();
         if(userDto.getId() == null){
@@ -116,7 +116,7 @@ public class UserController extends  BaseController{
      * @param id
      * @return
      */
-    @PatchMapping("/{id}/enable")
+    @PatchMapping(value="/{id}/enable",name="启用用户")
     public JsonResponse enable(@PathVariable("id") Long id){
         User user = new User();
         user.setId(id);
@@ -124,7 +124,7 @@ public class UserController extends  BaseController{
         return JsonResponse.buildSuccess();
     }
 
-    @PatchMapping("/{id}/disable")
+    @PatchMapping(value="/{id}/disable",name="禁用用户")
     public JsonResponse disable(@PathVariable("id")Long id){
         User user = new User();
         user.setId(id);
@@ -132,19 +132,19 @@ public class UserController extends  BaseController{
         return JsonResponse.buildSuccess();
     }
 
-    @GetMapping("/{username}/group")
+    @GetMapping(value="/{username}/group",name="获取用户部门")
     public JsonResponse<UserGroup> getGroup(@PathVariable("username")String  username){
         UserGroup userGroup = userGroupService.getGroup(username);
         return new JsonResponse<>(ResponseCode.SUCCESS,userGroup);
     }
 
-    @GetMapping("/{username}/role")
+    @GetMapping(value="/{username}/role",name="获取用户角色")
     public JsonResponse<Role> getRole(@PathVariable("username")String  username){
         Role role = roleService.getRole(username);
         return new JsonResponse<>(ResponseCode.SUCCESS,role);
     }
 
-    @GetMapping("/check")
+    @GetMapping(value="/check",name="校验用户")
     public JsonResponse checkUser(UserDto userDto){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if(userDto.getId()!=null){

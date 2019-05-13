@@ -36,7 +36,7 @@ public class RoleController extends BaseController {
     @Autowired
     private RoleService roleService;
 
-    @PostMapping("/create")
+    @PostMapping(value="/create",name="新增角色")
     public JsonResponse create(@RequestBody Role role) {
         role.setCreator(this.getToken().getUsername());
         role.setCreateTime(new Date());
@@ -44,19 +44,19 @@ public class RoleController extends BaseController {
         return JsonResponse.buildSuccess();
     }
 
-    @PutMapping("/update")
+    @PutMapping(value="/update",name="修改角色")
     public JsonResponse update(@RequestBody Role role) {
         roleService.updateById(role);
         return JsonResponse.buildSuccess();
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping(value="/{id}/delete",name="删除角色")
     public JsonResponse delete(@PathVariable("id") Long id) {
         roleService.remove(new QueryWrapper<Role>().eq("id", id));
         return JsonResponse.buildSuccess();
     }
 
-    @GetMapping("/pageList")
+    @GetMapping(value="/pageList",name="角色分页列表")
     public JsonResponse<Page<Role>> pageList(long pageSize, long pageNo) {
         JsonResponse<Page<Role>> json = new JsonResponse<>();
         Page<Role> page = new Page<>();
@@ -70,13 +70,13 @@ public class RoleController extends BaseController {
         return json;
     }
 
-    @GetMapping("/list")
+    @GetMapping(value="/list",name="角色列表")
     public JsonResponse<List<Role>> list(){
         List<Role> list = roleService.list(new QueryWrapper<Role>().eq("creator",this.getToken().getUsername()));
         return new JsonResponse<>(ResponseCode.SUCCESS,list);
     }
 
-    @GetMapping("/check")
+    @GetMapping(value="/check",name="校验角色")
     public JsonResponse check(Role role) {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
         if(role.getId()!=null){
@@ -97,7 +97,7 @@ public class RoleController extends BaseController {
         return JsonResponse.buildSuccess();
     }
 
-    @PostMapping("/authorization")
+    @PostMapping(value="/authorization",name="分配权限")
     public JsonResponse authorization(@RequestBody  RoleAuthorizationDto dto){
         if(dto.getPermissionIds() == null || dto.getPermissionIds().isEmpty()){
             return JsonResponse.buildFail("权限不能为空");

@@ -54,7 +54,7 @@ public class ArticleController extends BaseController {
      * @param article
      * @return
      */
-    @PostMapping("/draft")
+    @PostMapping(value="/draft",name="保存草稿")
     public JsonResponse draft(@RequestBody ArticleVO article) {
         UserDto user = this.getToken();
         article.setAuthorId(user.getUsername());
@@ -69,7 +69,7 @@ public class ArticleController extends BaseController {
      * @param article
      * @return
      */
-    @PostMapping("/toApprove")
+    @PostMapping(value="/toApprove",name="提交审核")
     public JsonResponse publish(@RequestBody ArticleVO article) {
         UserDto user = this.getToken();
         article.setAuthorId(user.getUsername());
@@ -84,7 +84,7 @@ public class ArticleController extends BaseController {
      * @param comment
      * @return
      */
-    @GetMapping("/approve/{id}/reject")
+    @GetMapping(value="/approve/{id}/reject",name="审核不通过")
     public JsonResponse reject(@PathVariable("id") String id, @RequestParam("comment") String comment) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
@@ -104,7 +104,7 @@ public class ArticleController extends BaseController {
      * @param comment
      * @return
      */
-    @GetMapping("/approve/{id}/pass")
+    @GetMapping(value="/approve/{id}/pass",name="审核通过")
     public JsonResponse pass(@PathVariable("id") String id, @RequestParam(value = "comment", required = false) String comment) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
@@ -117,7 +117,7 @@ public class ArticleController extends BaseController {
     }
 
 
-    @GetMapping("/{id}/revert")
+    @GetMapping(value="/{id}/revert",name="撤回")
     public JsonResponse revert(@PathVariable("id") String id) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
@@ -135,7 +135,7 @@ public class ArticleController extends BaseController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",name="文章详情")
     public JsonResponse<ArticleVO> detail(@PathVariable("id") String id) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
@@ -156,7 +156,7 @@ public class ArticleController extends BaseController {
      * @param id
      * @return
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value="/{id}",name="删除文章")
     public JsonResponse<Article> delete(@PathVariable("id") String id) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
@@ -176,7 +176,7 @@ public class ArticleController extends BaseController {
      * @param pageSize
      * @return
      */
-    @GetMapping("/myList")
+    @GetMapping(value="/myList",name="我的文章")
     public JsonResponse<Page<ArticleVO>> myList(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
                                                 @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
@@ -197,7 +197,7 @@ public class ArticleController extends BaseController {
      * @param pageSize
      * @return
      */
-    @GetMapping("/approveList")
+    @GetMapping(value="/approveList",name="文章审核列表")
     public JsonResponse<Page<ArticleVO>> approveList(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
                                                      @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
@@ -221,7 +221,7 @@ public class ArticleController extends BaseController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}/comment")
+    @GetMapping(value="/{id}/comment",name="查看审核未通过意见")
     public JsonResponse<ArticleLog> getComment(@PathVariable("id") Long id) {
         ArticleLog articleLog = articleLogService.getOne(new QueryWrapper<ArticleLog>()
                 .eq("article_id", id).eq("article_status",

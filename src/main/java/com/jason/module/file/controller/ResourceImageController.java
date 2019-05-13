@@ -58,7 +58,7 @@ public class ResourceImageController {
     private ImageGroupService imageGroupService;
 
 
-    @PostMapping("/upload")
+    @PostMapping(value="/upload",name="图片上传")
     public JsonResponse<List<ImageVO>> upload(HttpServletRequest request, @RequestParam("file") List<MultipartFile> fileList,@RequestParam("groupId") Long groupId) {
         Date now = Calendar.getInstance().getTime();
         List<ImageDTO> list = new ArrayList<>();
@@ -110,25 +110,25 @@ public class ResourceImageController {
      *
      * @return
      */
-    @GetMapping("/count")
+    @GetMapping(value="/count",name="图片分组")
     public JsonResponse<List<ImageCountVO>> count() {
         List<ImageCountVO> list = resourceImageService.countList();
         return JsonResponse.buildSuccess(list);
     }
 
-    @GetMapping("/all")
+    @GetMapping(value="/all",name="全部图片")
     public JsonResponse<List<ImageVO>> all() {
         List<ResourceImage> list = resourceImageService.list();
         return JsonResponse.buildSuccess(getVOList(list));
     }
 
-    @GetMapping("/{groupId}/list")
+    @GetMapping(value="/{groupId}/list",name="分组图片列表")
     public JsonResponse<List<ImageVO>> list(@PathVariable("groupId") Long groupId) {
         List<ResourceImage> list = resourceImageService.list(new QueryWrapper<ResourceImage>().eq("group_id", groupId));
         return JsonResponse.buildSuccess(getVOList(list));
     }
 
-    @PostMapping("/group")
+    @PostMapping(value="/group",name="新增分组")
     public JsonResponse addGroup(@RequestBody ImageGroup imageGroup){
         int count = imageGroupService.count(new QueryWrapper<ImageGroup>().eq("name",imageGroup.getName()));
         if(count > 0){
@@ -144,7 +144,7 @@ public class ResourceImageController {
      * @param imageVO
      * @return
      */
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",name="修改图片")
     public JsonResponse update(@PathVariable("id")String id,@RequestBody ImageVO imageVO){
         if(StringUtils.isEmpty(imageVO.getTitle())){
             return JsonResponse.buildFail("标题为空");

@@ -37,7 +37,7 @@ public class UserGroupController extends BaseController{
     @Autowired
     private UserGroupReService userGroupReService;
 
-    @PostMapping("/create")
+    @PostMapping(value="/create",name="新增部门")
     public JsonResponse create(@RequestBody UserGroup userGroup) {
         if(userGroup.getPid() == 0){
             Long pid = getToken().getUserGroup().getId();
@@ -47,13 +47,13 @@ public class UserGroupController extends BaseController{
         return JsonResponse.buildSuccess();
     }
 
-    @PutMapping("/update")
+    @PutMapping(value="/update",name="修改部门")
     public JsonResponse update(@RequestBody UserGroup userGroup) {
         userGroupService.updateById(userGroup);
         return JsonResponse.buildSuccess();
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping(value="/{id}/delete",name="删除部门")
     public JsonResponse delete(@PathVariable("id") Long id) {
         int ugcount = userGroupReService.count(new QueryWrapper<UserGroupRe>().eq("group_id", id));
         if(ugcount>0){
@@ -63,7 +63,7 @@ public class UserGroupController extends BaseController{
         return JsonResponse.buildSuccess();
     }
 
-    @GetMapping("/list")
+    @GetMapping(value="/list",name="部门列表")
     public JsonResponse<List<GroupDto>> list(){
         Long pid = this.getToken().getUserGroup().getId();
         JsonResponse<List<GroupDto>> json  = new JsonResponse<>();
@@ -73,7 +73,7 @@ public class UserGroupController extends BaseController{
         return json;
     }
 
-    @GetMapping("/check")
+    @GetMapping(value="/check",name="校验部门")
     public JsonResponse check(UserGroup userGroup){
         QueryWrapper<UserGroup> queryWrapper =new QueryWrapper<>();
         if(userGroup.getId()!=null){

@@ -29,14 +29,14 @@ public class MenuController extends BaseController {
     @Autowired
     private MenuService menuService;
 
-    @PostMapping("/create")
+    @PostMapping(value="/create",name="新增菜单")
     public JsonResponse create(@RequestBody Menu menu) {
         menuService.saveMenu(menu);
         return JsonResponse.buildSuccess();
     }
 
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping(value="/{id}/delete",name="删除菜单")
     public JsonResponse delete(@PathVariable("id") Long id) {
         menuService.remove(new QueryWrapper<Menu>().eq("id", id));
         return JsonResponse.buildSuccess();
@@ -44,7 +44,7 @@ public class MenuController extends BaseController {
     }
 
 
-    @PutMapping("/update")
+    @PutMapping(value="/update",name="修改菜单")
     public JsonResponse put(@RequestBody Menu menu) {
         JsonResponse response = JsonResponse.buildFail();
         if (menu.getId() == null) {
@@ -56,7 +56,7 @@ public class MenuController extends BaseController {
     }
 
 
-    @GetMapping("/list")
+    @GetMapping(value="/list",name="菜单列表")
     public JsonResponse<List<MenuDto>> list() {
         List<MenuDto> list;
         if (isAdmin()) {
@@ -72,7 +72,7 @@ public class MenuController extends BaseController {
         return json;
     }
 
-    @GetMapping("/{roleId}/tree")
+    @GetMapping(value="/{roleId}/tree",name="树形菜单")
     public JsonResponse<Map<String, Object>> listByRoleId(@PathVariable("roleId") Long roleId) {
         Map<String, Object> map;
         if (isAdmin()) {
@@ -83,7 +83,7 @@ public class MenuController extends BaseController {
         return new JsonResponse<>(ResponseCode.SUCCESS, map);
     }
 
-    @GetMapping("/check")
+    @GetMapping(value="/check",name="校验菜单")
     public JsonResponse check(Menu menu) {
         QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
         if (menu.getId() != null) {
