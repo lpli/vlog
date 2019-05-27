@@ -1,4 +1,4 @@
-package com.jason.module.article.entity;
+package com.jason.module.car.entity;
 
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -8,13 +8,13 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 
+ * 汽车款式
  * </p>
  *
  * @author lpli
- * @since 2019-04-21
+ * @since 2019-05-27
  */
-public class CarCategory extends Model<CarCategory> {
+public class CarClass extends Model<CarClass> {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class CarCategory extends Model<CarCategory> {
     /**
      * 品牌
      */
-    private String band;
+    private String brand;
 
     /**
      * 字母列表
@@ -46,6 +46,11 @@ public class CarCategory extends Model<CarCategory> {
      */
     private BigDecimal price;
 
+    /**
+     * 制造商
+     */
+    private String company;
+
 
     public Long getId() {
         return id;
@@ -55,12 +60,12 @@ public class CarCategory extends Model<CarCategory> {
         this.id = id;
     }
 
-    public String getBand() {
-        return band;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setBand(String band) {
-        this.band = band;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public String getLetter() {
@@ -95,6 +100,14 @@ public class CarCategory extends Model<CarCategory> {
         this.price = price;
     }
 
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
     @Override
     protected Serializable pkVal() {
         return this.id;
@@ -102,13 +115,14 @@ public class CarCategory extends Model<CarCategory> {
 
     @Override
     public String toString() {
-        return "CarCategory{" +
+        return "CarClass{" +
         "id=" + id +
-        ", band=" + band +
+        ", brand=" + brand +
         ", letter=" + letter +
         ", model=" + model +
         ", name=" + name +
         ", price=" + price +
+        ", company=" + company +
         "}";
     }
 }

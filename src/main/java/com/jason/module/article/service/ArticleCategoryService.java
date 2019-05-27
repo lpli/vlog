@@ -1,7 +1,7 @@
 package com.jason.module.article.service;
 
-import com.jason.module.article.entity.ArticleCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jason.module.article.entity.ArticleCategory;
 
 /**
  * <p>

@@ -1,24 +1,14 @@
 package com.jason.module.article.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.vo.JsonResponse;
-import com.jason.module.article.entity.Article;
 import com.jason.module.article.entity.ArticleCategory;
 import com.jason.module.article.service.ArticleCategoryService;
-import com.jason.module.article.service.ArticleService;
-import com.jason.module.security.dto.UserDto;
-import com.jason.module.security.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
-
-import javax.xml.ws.Response;
 import java.util.List;
 
 /**

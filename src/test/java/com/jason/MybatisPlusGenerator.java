@@ -43,7 +43,7 @@ public class MybatisPlusGenerator {
         ).setPackageInfo(
                 // 包配置
                 new PackageConfig()
-                        .setParent("com.jason.module.file")// 自定义包路径
+                        .setParent("com.jason.module.car")// 自定义包路径
                         .setController("controller")// 这里是控制器包名，默认 web
                         .setEntity("entity")
                         .setMapper("dao")
@@ -51,7 +51,7 @@ public class MybatisPlusGenerator {
                         .setServiceImpl("service.impl")
         ).setStrategy(new StrategyConfig().setCapitalMode(true).setNaming(NamingStrategy.underline_to_camel)
                 //包含表名
-                .setInclude("resource_image","image_group"))
+                .setInclude("car_brand","car_model","car_class"))
                 .setCfg(new InjectionConfig() {
             @Override
             public void initMap() {

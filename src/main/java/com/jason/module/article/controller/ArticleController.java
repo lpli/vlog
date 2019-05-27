@@ -2,12 +2,10 @@ package com.jason.module.article.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
 import com.jason.module.article.entity.Article;
-import com.jason.module.article.entity.ArticleCategory;
 import com.jason.module.article.entity.ArticleCover;
 import com.jason.module.article.entity.ArticleLog;
 import com.jason.module.article.enums.ArticleStatusEnum;
@@ -19,7 +17,6 @@ import com.jason.module.article.vo.ArticleVO;
 import com.jason.module.security.controller.BaseController;
 import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.service.UserService;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

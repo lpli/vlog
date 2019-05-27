@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jason.module.car.dao.CarModelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jason.module.car.entity.CarModel">
+        <id column="model" property="model" />
+        <result column="company" property="company" />
+        <result column="brand" property="brand" />
+        <result column="letter" property="letter" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        company, model, brand, letter
+    </sql>
+
+</mapper>
