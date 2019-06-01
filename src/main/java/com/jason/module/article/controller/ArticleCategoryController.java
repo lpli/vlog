@@ -32,8 +32,15 @@ public class ArticleCategoryController {
      * @return
      */
     @GetMapping(value = "/list", name = "栏目列表")
-    public JsonResponse<List<ArticleCategory>> getCategory() {
+    public JsonResponse<List<ArticleCategory>> getCategory(@RequestParam(value = "level",required = false) Integer level,
+                                                           @RequestParam(value = "id",required = false)Integer id) {
         QueryWrapper<ArticleCategory> queryWrapper = new QueryWrapper<>();
+        if(level!=null){
+            queryWrapper.eq("level",level);
+        }
+        if(id!= null){
+            queryWrapper.eq("pid",id);
+        }
         List<ArticleCategory> list = articleCategoryService.list(queryWrapper);
         return JsonResponse.buildSuccess(list);
     }
