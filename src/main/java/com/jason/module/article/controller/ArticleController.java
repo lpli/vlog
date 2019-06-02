@@ -9,20 +9,29 @@ import com.jason.module.article.entity.Article;
 import com.jason.module.article.entity.ArticleCover;
 import com.jason.module.article.entity.ArticleLog;
 import com.jason.module.article.enums.ArticleStatusEnum;
+import com.jason.module.article.enums.QueryTypeEnum;
 import com.jason.module.article.service.ArticleCategoryService;
 import com.jason.module.article.service.ArticleCoverService;
 import com.jason.module.article.service.ArticleLogService;
 import com.jason.module.article.service.ArticleService;
+import com.jason.module.article.vo.ArticleQueryVO;
+import com.jason.module.article.vo.ArticleStatusCount;
 import com.jason.module.article.vo.ArticleVO;
 import com.jason.module.security.controller.BaseController;
 import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.service.UserService;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.Query;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -176,18 +185,29 @@ public class ArticleController extends BaseController {
     /**
      * 我的稿件
      *
-     * @param pageNo
-     * @param pageSize
      * @return
      */
     @GetMapping(value="/myList",name="我的文章")
-    public JsonResponse<Page<ArticleVO>> myList(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                                @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+    public JsonResponse<Page<ArticleVO>> myList(@Validated ArticleQueryVO queryVO) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("author_id", this.getToken().getUsername());
-        queryWrapper.ne("status", ArticleStatusEnum.DELETED.getCode());
+        if(queryVO.getStatus() == null){
+            queryWrapper.ne("status", ArticleStatusEnum.DELETED.getCode());
+        }else{
+            queryWrapper.eq("status", queryVO.getStatus());
+        }
+        if(StringUtils.isNotEmpty(queryVO.getQueryValue())){
+            if(QueryTypeEnum.TITILE_SEARCH.getCode().equals(queryVO.getQueryType())){
+                queryWrapper.like("title",queryVO.getQueryValue());
+            }else if(QueryTypeEnum.AUTHOR_SEARCH.getCode().equals(queryVO.getQueryType())){
+                queryWrapper.like("author_id",queryVO.getQueryValue());
+            }
+        }
+        if(queryVO.getArticleCategory() !=null){
+            queryWrapper.eq("article_category",queryVO.getArticleCategory());
+        }
         queryWrapper.orderByDesc("update_time");
-        Page<ArticleVO> data = articleService.getPageList(pageNo, pageSize, queryWrapper);
+        Page<ArticleVO> data = articleService.getPageList(queryVO.getPageNo(), queryVO.getPageSize(), queryWrapper);
         JsonResponse<Page<ArticleVO>> response = new JsonResponse<>();
         response.setCode(ResponseCode.SUCCESS.getCode());
         response.setData(data);
@@ -202,16 +222,25 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping(value="/approveList",name="文章审核列表")
-    public JsonResponse<Page<ArticleVO>> approveList(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                                     @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+    public JsonResponse<Page<ArticleVO>> approveList(@Validated ArticleQueryVO queryVO) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         if (!this.isAdmin()) {
             List<String> userList = userService.selectSubUserByGroupId(this.getToken());
             queryWrapper.in("author_id", userList);
         }
         queryWrapper.eq("status", ArticleStatusEnum.APPROVE.getCode());
+        if(StringUtils.isNotEmpty(queryVO.getQueryValue())){
+            if(QueryTypeEnum.TITILE_SEARCH.getCode().equals(queryVO.getQueryType())){
+                queryWrapper.like("title",queryVO.getQueryValue());
+            }else if(QueryTypeEnum.AUTHOR_SEARCH.getCode().equals(queryVO.getQueryType())){
+                queryWrapper.like("author_id",queryVO.getQueryValue());
+            }
+        }
+        if(queryVO.getArticleCategory() !=null){
+            queryWrapper.eq("article_category",queryVO.getArticleCategory());
+        }
         queryWrapper.orderByDesc("id");
-        Page<ArticleVO> data = articleService.getPageList(pageNo, pageSize, queryWrapper);
+        Page<ArticleVO> data = articleService.getPageList(queryVO.getPageNo(), queryVO.getPageSize(), queryWrapper);
         JsonResponse<Page<ArticleVO>> response = new JsonResponse<>();
         response.setCode(ResponseCode.SUCCESS.getCode());
         response.setData(data);
@@ -234,6 +263,33 @@ public class ArticleController extends BaseController {
     }
 
 
+    @GetMapping(value="/statusCount",name="状态统计")
+    public JsonResponse<List<ArticleStatusCount>> getCount(ArticleQueryVO queryVO){
+        QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("author_id",this.getToken().getUsername());
+        queryWrapper.ne("status",ArticleStatusEnum.DELETED.getCode());
 
+        queryWrapper.select("status","count(1)");
+        if(StringUtils.isNotEmpty(queryVO.getQueryValue())){
+            if(QueryTypeEnum.TITILE_SEARCH.getCode().equals(queryVO.getQueryType())){
+                queryWrapper.like("title",queryVO.getQueryValue());
+            }
+        }
+        if(queryVO.getArticleCategory() !=null){
+            queryWrapper.eq("article_category",queryVO.getArticleCategory());
+        }
+        queryWrapper.groupBy("status");
+        List<Map<String,Object>> list = articleService.listMaps(queryWrapper);
+        List<ArticleStatusCount> statusCountList = new ArrayList<>();
+        for(Map<String,Object> map:list){
+            ArticleStatusCount statusCount = new ArticleStatusCount();
+            Integer status = MapUtils.getInteger(map,"status");
+            statusCount.setStatus(status);
+            statusCount.setDesc(ArticleStatusEnum.getNameByCode(status));
+            statusCount.setCount(MapUtils.getLong(map,"count(1)"));
+            statusCountList.add(statusCount);
+        }
+        return JsonResponse.buildSuccess(statusCountList);
+    }
 }
 

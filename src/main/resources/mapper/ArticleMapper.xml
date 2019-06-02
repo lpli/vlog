@@ -23,4 +23,14 @@
         id, title, cover_type, author_id, status, content, create_time, update_time, publish_time, article_category, car_category, tags
     </sql>
 
+    <resultMap id="statusCount" type="com.jason.module.article.vo.ArticleStatusCount">
+        <result column="status" property="status"/>
+        <result column="count" property="count"/>
+    </resultMap>
+    <select id="getCount" resultMap="statusCount">
+        select `status`,count(1) as `count` from article
+        where author_id = #{username} and status > -1
+        group by status
+    </select>
+
 </mapper>

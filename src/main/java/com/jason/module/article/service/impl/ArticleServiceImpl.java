@@ -8,11 +8,14 @@ import com.jason.module.article.dao.ArticleCoverMapper;
 import com.jason.module.article.dao.ArticleLogMapper;
 import com.jason.module.article.dao.ArticleMapper;
 import com.jason.module.article.entity.Article;
+import com.jason.module.article.entity.ArticleCategory;
 import com.jason.module.article.entity.ArticleCover;
 import com.jason.module.article.entity.ArticleLog;
 import com.jason.module.article.enums.ArticleStatusEnum;
+import com.jason.module.article.service.ArticleCategoryService;
 import com.jason.module.article.service.ArticleCoverService;
 import com.jason.module.article.service.ArticleService;
+import com.jason.module.article.vo.ArticleStatusCount;
 import com.jason.module.article.vo.ArticleVO;
 import com.jason.module.security.dto.UserDto;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -39,6 +43,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private ArticleCoverService articleCoverService;
+
+    @Autowired
+    private ArticleCategoryService articleCategoryService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -134,11 +141,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         IPage<Article> iPage = baseMapper.selectPage(page,queryWrapper);
         List<Long> articleIds = new ArrayList<>();
         List<ArticleVO> dataList =new ArrayList<>();
+        List<Long> categoryIds = new ArrayList<>();
         for(Article article:iPage.getRecords()){
             articleIds.add(article.getId());
             ArticleVO vo = new ArticleVO();
             BeanUtils.copyProperties(article,vo);
             dataList.add(vo);
+
+            categoryIds.add(article.getArticleCategory());
         }
         if(!articleIds.isEmpty()){
             QueryWrapper<ArticleCover> coverQueryWrapper = new QueryWrapper<>();
@@ -152,9 +162,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 }
                 map.get(cover.getArticleId()).add(cover);
             }
+            QueryWrapper<ArticleCategory> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper.in("id",categoryIds);
+            List<ArticleCategory> categoryList = articleCategoryService.list(queryWrapper1);
+            Map<Long,ArticleCategory> categoryMap = categoryList.stream().collect(Collectors.toMap(ArticleCategory::getId,a->a,(k1,k2)->k1));
 
             for(ArticleVO article:dataList){
                 article.setCoverList(map.get(article.getId()));
+                if(categoryMap.containsKey(article.getArticleCategory())){
+                    article.setCategoryName(categoryMap.get(article.getArticleCategory()).getName());
+                }
             }
         }
         Page<ArticleVO> pageVO = new Page<>();
@@ -195,5 +212,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         log.setOperateTime(now);
         log.setArticleStatus(ArticleStatusEnum.DELETED.getCode());
         articleLogMapper.insert(log);
+    }
+
+    @Override
+    public List<ArticleStatusCount> getCount(String username) {
+        return baseMapper.getCount(username);
     }
 }

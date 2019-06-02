@@ -12,6 +12,8 @@ import java.util.List;
  **/
 public class ArticleVO extends Article implements Serializable {
 
+    public String categoryName;
+
     private List<ArticleCover> coverList;
 
     public List<ArticleCover> getCoverList() {
@@ -20,6 +22,14 @@ public class ArticleVO extends Article implements Serializable {
 
     public void setCoverList(List<ArticleCover> coverList) {
         this.coverList = coverList;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     @Override

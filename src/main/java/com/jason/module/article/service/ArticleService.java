@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.module.article.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jason.module.article.vo.ArticleStatusCount;
 import com.jason.module.article.vo.ArticleVO;
 import com.jason.module.security.dto.UserDto;
+
+import java.util.List;
 
 /**
  * <p>
@@ -53,5 +56,7 @@ public interface ArticleService extends IService<Article> {
     Page<ArticleVO> getPageList(Integer pageNo, Integer pageSize, QueryWrapper<Article> queryWrapper);
 
      void delete(Article article);
+
+     List<ArticleStatusCount> getCount(String username);
 
 }
