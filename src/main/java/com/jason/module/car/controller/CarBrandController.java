@@ -29,7 +29,7 @@ public class CarBrandController {
     @Autowired
     private CarBrandService carBandService;
 
-    @GetMapping(value="/list",name="汽车品牌列表")
+    @GetMapping(value="/list",name="品牌列表")
     public JsonResponse<List<CarBrand>> list(@RequestParam(value = "letter",required = false)String letter){
         QueryWrapper<CarBrand> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotEmpty(letter)){

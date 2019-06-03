@@ -40,6 +40,8 @@ public class Operation extends Model<Operation> {
      */
     private Long pid;
 
+    private String method;
+
 
     public Long getId() {
         return id;
@@ -79,6 +81,14 @@ public class Operation extends Model<Operation> {
 
     public void setPid(Long pid) {
         this.pid = pid;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     @Override

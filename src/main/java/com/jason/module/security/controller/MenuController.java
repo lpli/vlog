@@ -83,7 +83,7 @@ public class MenuController extends BaseController {
         return new JsonResponse<>(ResponseCode.SUCCESS, map);
     }
 
-    @GetMapping(value="/check",name="校验菜单")
+    @GetMapping(value="/check",name="校验菜单字段")
     public JsonResponse check(Menu menu) {
         QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
         if (menu.getId() != null) {

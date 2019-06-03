@@ -144,7 +144,7 @@ public class UserController extends  BaseController{
         return new JsonResponse<>(ResponseCode.SUCCESS,role);
     }
 
-    @GetMapping(value="/check",name="校验用户")
+    @GetMapping(value="/check",name="校验用户字段")
     public JsonResponse checkUser(UserDto userDto){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if(userDto.getId()!=null){

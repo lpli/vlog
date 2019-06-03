@@ -76,7 +76,7 @@ public class RoleController extends BaseController {
         return new JsonResponse<>(ResponseCode.SUCCESS,list);
     }
 
-    @GetMapping(value="/check",name="校验角色")
+    @GetMapping(value="/check",name="校验角色字段")
     public JsonResponse check(Role role) {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
         if(role.getId()!=null){

@@ -38,9 +38,6 @@ import java.util.regex.Pattern;
 public class OperationController extends BaseController{
 
     @Autowired
-    private RequestMappingHandlerMapping requestMappingHandlerMapping;
-
-    @Autowired
     private OperationService operationService;
 
     @PostMapping(value="/create",name="新增操作")
@@ -88,7 +85,7 @@ public class OperationController extends BaseController{
         return json;
     }
 
-    @GetMapping(value="/check",name="校验操作")
+    @GetMapping(value="/check",name="校验操作字段")
     public JsonResponse check(Operation operation) {
         QueryWrapper<Operation> queryWrapper = new QueryWrapper<>();
         if(operation.getId()!=null){
@@ -116,23 +113,7 @@ public class OperationController extends BaseController{
     }
 
 
-    @GetMapping(value="/url",name="获取所有url")
-    public JsonResponse<List<Map<String,Object>>> getUrl(){
 
-        Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();
-        List<Map<String,Object>> list = new ArrayList<>();
-        for(Map.Entry<RequestMappingInfo, HandlerMethod> en:map.entrySet()){
-            Map<String,Object> m = new HashMap<>();
-            RequestMappingInfo info = en.getKey();
-            PatternsRequestCondition p = info.getPatternsCondition();
-            for(String s:p.getPatterns()){
-                m.put("name",info.getName());
-                m.put("url", s.replaceAll("\\{.+\\}","*"));
-                list.add(m);
-            }
-        }
-        return JsonResponse.buildSuccess(list);
-    }
 
 }
 

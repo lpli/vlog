@@ -30,7 +30,7 @@ public class CarModelController {
     @Autowired
     private CarModelService carModelService;
 
-    @GetMapping("/list")
+    @GetMapping(value="/list",name="获取车系列表")
     public JsonResponse<List<CarModel>> list(@RequestParam("brand")String brand){
         QueryWrapper<CarModel> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("brand",brand);

@@ -31,7 +31,7 @@ public class ArticleCategoryController {
      *
      * @return
      */
-    @GetMapping(value = "/list", name = "栏目列表")
+    @GetMapping(value = "/list", name = "获取栏目列表")
     public JsonResponse<List<ArticleCategory>> getCategory(@RequestParam(value = "level",required = false) Integer level,
                                                            @RequestParam(value = "id",required = false)Integer id) {
         QueryWrapper<ArticleCategory> queryWrapper = new QueryWrapper<>();
@@ -45,7 +45,7 @@ public class ArticleCategoryController {
         return JsonResponse.buildSuccess(list);
     }
 
-    @GetMapping(value = "nameList", name = "栏目列表名称")
+    @GetMapping(value = "nameList", name = "获取栏目列表名称")
     public JsonResponse<List<ArticleCategory>> getCategoryName() {
         QueryWrapper<ArticleCategory> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("id", "name");
@@ -83,7 +83,7 @@ public class ArticleCategoryController {
         return JsonResponse.buildSuccess();
     }
 
-    @GetMapping(value = "/check", name = "校验")
+    @GetMapping(value = "/check", name = "栏目字段校验")
     public JsonResponse check(ArticleCategory articleCategory) {
         QueryWrapper<ArticleCategory> queryWrapper = new QueryWrapper<>();
         if (articleCategory.getId() != null) {

@@ -49,7 +49,7 @@ public class ExceptionController implements ErrorController {
     }
 
 
-    @RequestMapping(value = "/error")
+    @RequestMapping(value = "/error",name="错误信息")
     @ResponseBody
     public JsonResponse error(HttpServletRequest request) {
         Map<String, Object> body = getErrorAttributes(request,

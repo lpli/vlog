@@ -9,6 +9,7 @@
         <result column="url" property="url" />
         <result column="code" property="code" />
         <result column="pid" property="pid" />
+        <result column="method" property="method" />
     </resultMap>
 
     <resultMap id="DtoResultMap" type="com.jason.module.security.dto.OperationDto" extends="BaseResultMap">
@@ -17,7 +18,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, url, code, pid
+        id, name, url, code, pid,method
     </sql>
 
     <select id="queryOperationListByRole" parameterType="java.util.List" resultMap="DtoResultMap">

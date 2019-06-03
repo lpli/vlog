@@ -73,7 +73,7 @@ public class UserGroupController extends BaseController{
         return json;
     }
 
-    @GetMapping(value="/check",name="校验部门")
+    @GetMapping(value="/check",name="校验部门字段")
     public JsonResponse check(UserGroup userGroup){
         QueryWrapper<UserGroup> queryWrapper =new QueryWrapper<>();
         if(userGroup.getId()!=null){
