@@ -4,6 +4,7 @@ package com.jason.module.security.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.security.comp.PermissionIgnore;
 import com.jason.module.security.dto.MenuDto;
 import com.jason.module.security.entity.Menu;
 import com.jason.module.security.service.MenuService;
@@ -57,6 +58,7 @@ public class MenuController extends BaseController {
 
 
     @GetMapping(value="/list",name="菜单列表")
+    @PermissionIgnore
     public JsonResponse<List<MenuDto>> list() {
         List<MenuDto> list;
         if (isAdmin()) {
@@ -73,6 +75,7 @@ public class MenuController extends BaseController {
     }
 
     @GetMapping(value="/{roleId}/tree",name="树形菜单")
+    @PermissionIgnore
     public JsonResponse<Map<String, Object>> listByRoleId(@PathVariable("roleId") Long roleId) {
         Map<String, Object> map;
         if (isAdmin()) {
@@ -84,6 +87,7 @@ public class MenuController extends BaseController {
     }
 
     @GetMapping(value="/check",name="校验菜单字段")
+    @PermissionIgnore
     public JsonResponse check(Menu menu) {
         QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
         if (menu.getId() != null) {

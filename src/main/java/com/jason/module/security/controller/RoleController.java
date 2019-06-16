@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.security.comp.PermissionIgnore;
 import com.jason.module.security.dto.RoleAuthorizationDto;
 import com.jason.module.security.entity.Role;
 import com.jason.module.security.service.RoleService;
@@ -57,6 +58,7 @@ public class RoleController extends BaseController {
     }
 
     @GetMapping(value="/pageList",name="角色分页列表")
+    @PermissionIgnore
     public JsonResponse<Page<Role>> pageList(long pageSize, long pageNo) {
         JsonResponse<Page<Role>> json = new JsonResponse<>();
         Page<Role> page = new Page<>();
@@ -71,12 +73,14 @@ public class RoleController extends BaseController {
     }
 
     @GetMapping(value="/list",name="角色列表")
+    @PermissionIgnore
     public JsonResponse<List<Role>> list(){
         List<Role> list = roleService.list(new QueryWrapper<Role>().eq("creator",this.getToken().getUsername()));
         return new JsonResponse<>(ResponseCode.SUCCESS,list);
     }
 
     @GetMapping(value="/check",name="校验角色字段")
+    @PermissionIgnore
     public JsonResponse check(Role role) {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
         if(role.getId()!=null){

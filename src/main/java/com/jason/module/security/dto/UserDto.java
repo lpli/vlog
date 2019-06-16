@@ -19,6 +19,8 @@ public class UserDto extends User implements UserDetails {
 
     private Long roleId;
 
+    private String npass;
+
     public void setUserAuthorityList(List<UserAuthority> userAuthorityList) {
         this.userAuthorityList = userAuthorityList;
     }
@@ -84,5 +86,13 @@ public class UserDto extends User implements UserDetails {
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
+    }
+
+    public String getNpass() {
+        return npass;
+    }
+
+    public void setNpass(String npass) {
+        this.npass = npass;
     }
 }

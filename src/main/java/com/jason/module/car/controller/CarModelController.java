@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.common.vo.JsonResponse;
 import com.jason.module.car.entity.CarModel;
 import com.jason.module.car.service.CarModelService;
+import com.jason.module.security.comp.PermissionIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,7 @@ public class CarModelController {
     private CarModelService carModelService;
 
     @GetMapping(value="/list",name="获取车系列表")
+    @PermissionIgnore
     public JsonResponse<List<CarModel>> list(@RequestParam("brand")String brand){
         QueryWrapper<CarModel> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("brand",brand);

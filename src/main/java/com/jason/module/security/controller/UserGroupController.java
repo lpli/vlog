@@ -4,6 +4,7 @@ package com.jason.module.security.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.security.comp.PermissionIgnore;
 import com.jason.module.security.dto.GroupDto;
 import com.jason.module.security.entity.UserGroup;
 import com.jason.module.security.entity.UserGroupRe;
@@ -64,6 +65,7 @@ public class UserGroupController extends BaseController{
     }
 
     @GetMapping(value="/list",name="部门列表")
+    @PermissionIgnore
     public JsonResponse<List<GroupDto>> list(){
         Long pid = this.getToken().getUserGroup().getId();
         JsonResponse<List<GroupDto>> json  = new JsonResponse<>();
@@ -74,6 +76,7 @@ public class UserGroupController extends BaseController{
     }
 
     @GetMapping(value="/check",name="校验部门字段")
+    @PermissionIgnore
     public JsonResponse check(UserGroup userGroup){
         QueryWrapper<UserGroup> queryWrapper =new QueryWrapper<>();
         if(userGroup.getId()!=null){

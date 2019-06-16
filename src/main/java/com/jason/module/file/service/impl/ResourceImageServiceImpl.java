@@ -68,7 +68,7 @@ public class ResourceImageServiceImpl extends ServiceImpl<ResourceImageMapper, R
         ImageCountVO vo = new ImageCountVO();
         vo.setTotal(Long.valueOf(this.count()));
         vo.setGroupName("全部图片");
-        vo.setGroupId(Long.valueOf(-1));
+        vo.setGroupId(0L);
         voList.add(vo);
         for(ImageGroup imageGroup:groupList){
             int count = this.count(new QueryWrapper<ResourceImage>().eq("group_id",imageGroup.getId()));

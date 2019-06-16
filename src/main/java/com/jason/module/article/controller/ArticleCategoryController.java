@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.common.vo.JsonResponse;
 import com.jason.module.article.entity.ArticleCategory;
 import com.jason.module.article.service.ArticleCategoryService;
+import com.jason.module.security.comp.PermissionIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ public class ArticleCategoryController {
      * @return
      */
     @GetMapping(value = "/list", name = "获取栏目列表")
+    @PermissionIgnore
     public JsonResponse<List<ArticleCategory>> getCategory(@RequestParam(value = "level",required = false) Integer level,
                                                            @RequestParam(value = "id",required = false)Integer id) {
         QueryWrapper<ArticleCategory> queryWrapper = new QueryWrapper<>();
@@ -46,6 +48,7 @@ public class ArticleCategoryController {
     }
 
     @GetMapping(value = "nameList", name = "获取栏目列表名称")
+    @PermissionIgnore
     public JsonResponse<List<ArticleCategory>> getCategoryName() {
         QueryWrapper<ArticleCategory> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("id", "name");
@@ -84,6 +87,7 @@ public class ArticleCategoryController {
     }
 
     @GetMapping(value = "/check", name = "栏目字段校验")
+    @PermissionIgnore
     public JsonResponse check(ArticleCategory articleCategory) {
         QueryWrapper<ArticleCategory> queryWrapper = new QueryWrapper<>();
         if (articleCategory.getId() != null) {

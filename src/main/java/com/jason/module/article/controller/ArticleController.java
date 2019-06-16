@@ -17,6 +17,7 @@ import com.jason.module.article.service.ArticleService;
 import com.jason.module.article.vo.ArticleQueryVO;
 import com.jason.module.article.vo.ArticleStatusCount;
 import com.jason.module.article.vo.ArticleVO;
+import com.jason.module.security.comp.PermissionIgnore;
 import com.jason.module.security.controller.BaseController;
 import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.service.UserService;
@@ -149,6 +150,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping(value="/{id}",name="文章详情")
+    @PermissionIgnore
     public JsonResponse<ArticleVO> detail(@PathVariable("id") String id) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
@@ -188,6 +190,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping(value="/myList",name="我的文章")
+    @PermissionIgnore
     public JsonResponse<Page<ArticleVO>> myList(@Validated ArticleQueryVO queryVO) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("author_id", this.getToken().getUsername());
@@ -222,10 +225,18 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping(value="/approveList",name="文章审核列表")
+    @PermissionIgnore
     public JsonResponse<Page<ArticleVO>> approveList(@Validated ArticleQueryVO queryVO) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         if (!this.isAdmin()) {
             List<String> userList = userService.selectSubUserByGroupId(this.getToken());
+            if(userList.isEmpty()){
+                Page<ArticleVO> data = new Page<>();
+                data.setTotal(0L);
+                data.setCurrent(queryVO.getPageNo());
+                data.setCurrent(queryVO.getPageSize());
+                return JsonResponse.buildSuccess(data);
+            }
             queryWrapper.in("author_id", userList);
         }
         queryWrapper.eq("status", ArticleStatusEnum.APPROVE.getCode());
@@ -255,6 +266,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping(value="/{id}/comment",name="查看审核未通过意见")
+    @PermissionIgnore
     public JsonResponse<ArticleLog> getComment(@PathVariable("id") Long id) {
         ArticleLog articleLog = articleLogService.getOne(new QueryWrapper<ArticleLog>()
                 .eq("article_id", id).eq("article_status",
@@ -264,6 +276,7 @@ public class ArticleController extends BaseController {
 
 
     @GetMapping(value="/statusCount",name="状态统计")
+    @PermissionIgnore
     public JsonResponse<List<ArticleStatusCount>> getCount(ArticleQueryVO queryVO){
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("author_id",this.getToken().getUsername());

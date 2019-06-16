@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.security.comp.PermissionIgnore;
 import com.jason.module.security.dto.UserDto;
 import com.jason.module.security.entity.Role;
 import com.jason.module.security.entity.User;
@@ -56,6 +57,7 @@ public class UserController extends  BaseController{
      * @return
      */
     @GetMapping(value="/pageList",name="用户分页列表")
+    @PermissionIgnore
     public JsonResponse<Page<User>> list(long pageSize,long pageNo,UserDto userDto){
         JsonResponse<Page<User>> json = new JsonResponse<>();
         Page<User> page = new Page<>();
@@ -84,6 +86,13 @@ public class UserController extends  BaseController{
         userDto.setCreateTime(new Date());
         userDto.setPassword(passwordEncoder.encode(defaultPassword));
         return user(userDto,userDto.getGroupId());
+    }
+
+    @PostMapping(value="/account",name="账户设置")
+    public JsonResponse account(@RequestBody UserDto userDto){
+        userDto.setPassword(passwordEncoder.encode(userDto.getNpass()));
+        userService.updateById(userDto);
+        return JsonResponse.buildSuccess();
     }
 
     private JsonResponse user(UserDto userDto,Long groupId){
@@ -133,18 +142,21 @@ public class UserController extends  BaseController{
     }
 
     @GetMapping(value="/{username}/group",name="获取用户部门")
+    @PermissionIgnore
     public JsonResponse<UserGroup> getGroup(@PathVariable("username")String  username){
         UserGroup userGroup = userGroupService.getGroup(username);
         return new JsonResponse<>(ResponseCode.SUCCESS,userGroup);
     }
 
     @GetMapping(value="/{username}/role",name="获取用户角色")
+    @PermissionIgnore
     public JsonResponse<Role> getRole(@PathVariable("username")String  username){
         Role role = roleService.getRole(username);
         return new JsonResponse<>(ResponseCode.SUCCESS,role);
     }
 
     @GetMapping(value="/check",name="校验用户字段")
+    @PermissionIgnore
     public JsonResponse checkUser(UserDto userDto){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if(userDto.getId()!=null){
@@ -169,6 +181,11 @@ public class UserController extends  BaseController{
             int count = userService.count(queryWrapper.eq("email",userDto.getEmail()));
             if(count > 0){
                 return JsonResponse.buildFail("邮箱已被注册");
+            }
+        }else if(StringUtils.isNotEmpty(userDto.getPassword())){
+            int count = userService.count(queryWrapper.eq("password",passwordEncoder.encode(userDto.getPassword())));
+            if(count == 0){
+                return JsonResponse.buildFail("密码不正确");
             }
         }
         return JsonResponse.buildSuccess();

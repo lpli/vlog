@@ -1,6 +1,7 @@
 package com.jason.module.security.controller;
 
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.security.comp.PermissionIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorController;
@@ -50,6 +51,7 @@ public class ExceptionController implements ErrorController {
 
 
     @RequestMapping(value = "/error",name="错误信息")
+    @PermissionIgnore
     @ResponseBody
     public JsonResponse error(HttpServletRequest request) {
         Map<String, Object> body = getErrorAttributes(request,

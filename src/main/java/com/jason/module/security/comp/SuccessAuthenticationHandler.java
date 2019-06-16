@@ -1,6 +1,7 @@
 package com.jason.module.security.comp;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
 import com.jason.module.security.dto.UserDto;
@@ -52,7 +53,15 @@ public class SuccessAuthenticationHandler implements AuthenticationSuccessHandle
             httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8.toString());
             JsonResponse<UserDto> json = new JsonResponse<>(ResponseCode.SUCCESS.getCode(), "登录成功");
             json.setData(userDto);
-            httpServletResponse.getWriter().write(JSONObject.toJSONString(json));
+            httpServletResponse.getWriter().write(JSONObject.toJSONString(json, new PropertyFilter() {
+                @Override
+                public boolean apply(Object o, String s, Object o1) {
+                    if("password".equalsIgnoreCase(s)){
+                        return false;
+                    }
+                    return true;
+                }
+            }));
         } else {
             httpServletResponse.sendRedirect("/index");
         }

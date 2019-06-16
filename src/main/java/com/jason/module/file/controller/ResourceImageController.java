@@ -11,6 +11,7 @@ import com.jason.module.file.service.ResourceImageService;
 import com.jason.module.file.util.FileTypeUtil;
 import com.jason.module.file.vo.ImageCountVO;
 import com.jason.module.file.vo.ImageVO;
+import com.jason.module.security.comp.PermissionIgnore;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -111,18 +112,21 @@ public class ResourceImageController {
      * @return
      */
     @GetMapping(value="/count",name="图片分组")
+    @PermissionIgnore
     public JsonResponse<List<ImageCountVO>> count() {
         List<ImageCountVO> list = resourceImageService.countList();
         return JsonResponse.buildSuccess(list);
     }
 
     @GetMapping(value="/all",name="全部图片")
+    @PermissionIgnore
     public JsonResponse<List<ImageVO>> all() {
         List<ResourceImage> list = resourceImageService.list();
         return JsonResponse.buildSuccess(getVOList(list));
     }
 
     @GetMapping(value="/{groupId}/list",name="分组图片列表")
+    @PermissionIgnore
     public JsonResponse<List<ImageVO>> list(@PathVariable("groupId") Long groupId) {
         List<ResourceImage> list = resourceImageService.list(new QueryWrapper<ResourceImage>().eq("group_id", groupId));
         return JsonResponse.buildSuccess(getVOList(list));

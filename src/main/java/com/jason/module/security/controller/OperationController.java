@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jason.common.enums.ResponseCode;
 import com.jason.common.vo.JsonResponse;
+import com.jason.module.security.comp.PermissionIgnore;
 import com.jason.module.security.dto.OperationDto;
 import com.jason.module.security.entity.Menu;
 import com.jason.module.security.entity.Operation;
@@ -59,6 +60,7 @@ public class OperationController extends BaseController{
     }
 
     @GetMapping(value="/{roleId}/list",name="获取角色下操作")
+    @PermissionIgnore
     public JsonResponse<Map<String,Object>> getOpsByRoleId(@PathVariable("roleId")Long roleId){
         Map<String,Object> map;
         if(isAdmin()){
@@ -70,6 +72,7 @@ public class OperationController extends BaseController{
     }
 
     @GetMapping(value="/pageList",name="操作分页列表")
+    @PermissionIgnore
     public JsonResponse<Page<Operation>> pageList(
             @RequestParam(value = "pageNo",defaultValue = "1") Long pageNo,
             @RequestParam(value = "pageSize",defaultValue = "10")Long pageSize){
@@ -86,6 +89,7 @@ public class OperationController extends BaseController{
     }
 
     @GetMapping(value="/check",name="校验操作字段")
+    @PermissionIgnore
     public JsonResponse check(Operation operation) {
         QueryWrapper<Operation> queryWrapper = new QueryWrapper<>();
         if(operation.getId()!=null){

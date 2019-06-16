@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jason.common.vo.JsonResponse;
 import com.jason.module.car.entity.CarBrand;
 import com.jason.module.car.service.CarBrandService;
+import com.jason.module.security.comp.PermissionIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ public class CarBrandController {
     private CarBrandService carBandService;
 
     @GetMapping(value="/list",name="品牌列表")
+    @PermissionIgnore
     public JsonResponse<List<CarBrand>> list(@RequestParam(value = "letter",required = false)String letter){
         QueryWrapper<CarBrand> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotEmpty(letter)){

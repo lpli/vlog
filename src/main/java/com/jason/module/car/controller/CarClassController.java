@@ -6,6 +6,7 @@ import com.jason.common.vo.JsonResponse;
 import com.jason.module.car.entity.CarClass;
 import com.jason.module.car.service.CarClassService;
 import com.jason.module.car.vo.CarClassQueryVO;
+import com.jason.module.security.comp.PermissionIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class CarClassController {
      * @return
      */
     @GetMapping(value = "/list", name = "获取车型列表")
+    @PermissionIgnore
     public JsonResponse<List<CarClass>> getList(CarClassQueryVO queryVO) {
         QueryWrapper<CarClass> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotEmpty(queryVO.getLetter())) {
@@ -49,6 +51,7 @@ public class CarClassController {
     }
 
     @GetMapping(value = "/{id}", name = "获取车型")
+    @PermissionIgnore
     public JsonResponse<CarClass> get(@PathVariable("id") Integer id) {
         QueryWrapper<CarClass> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
@@ -91,6 +94,7 @@ public class CarClassController {
     }
 
     @PostMapping("/check")
+    @PermissionIgnore
     public JsonResponse check(@RequestBody CarClass carClass) {
         QueryWrapper<CarClass> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isEmpty(carClass.getName())) {
